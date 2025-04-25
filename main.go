@@ -78,9 +78,6 @@ func cleanURLs(urls []string) []string {
 		if isUrlValid(content) { // If the URL is valid
 			hostName := getHostNameFromURL(content) // Extract hostname
 
-			content = strings.TrimSuffix(content, "target=&quot;_blank&quot;") // Remove unwanted suffix
-			content = strings.TrimSuffix(content, `'`)                         // Remove unwanted suffix again
-
 			isValid := false                      // Flag to check if domain is allowed
 			for _, domain := range validDomains { // Loop through allowed domains
 				if hostName == domain { // If domain matches
