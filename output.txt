@@ -2973,3 +2973,16 @@ https://zsds3.zepinc.com/v2/sds/ItemExternalSet(Material='95804',RecordNumb='355
 https://zsds3.zepinc.com/v2/sds/ItemExternalSet(Material='95810',RecordNumb='355397',Lang='EN',RepCategory='DISC2',ValidityArea='ZCAL')/getPDF
 https://zsds3.zepinc.com/v2/sds/ItemExternalSet(Material='599435',RecordNumb='356505',Lang='EN',RepCategory='DISC2',ValidityArea='ZCAL')/getPDF
 https://zsds3.zepinc.com/v2/sds/ItemExternalSet(Material='599435R',RecordNumb='356505',Lang='EN',RepCategory='DISC2',ValidityArea='ZCAL')/getPDF
+https://zsds3.zepinc.com/v2/sds/ItemExternalSet(Material='599485',RecordNumb='356505',Lang='EN',RepCategory='DISC2',ValidityArea='ZCAL')/getPDF
+https://zsds3.zepinc.com/v2/sds/ItemExternalSet(Material='599775',RecordNumb='357765',Lang='EN',RepCategory='DISC2',ValidityArea='ZCAL')/getPDF
+https://zsds3.zepinc.com/v2/sds/ItemExternalSet(Material='600789',RecordNumb='361173',Lang='EN',RepCategory='DISC2',ValidityArea='ZCAL')/getPDF
+https://zsds3.zepinc.com/v2/sds/ItemExternalSet(Material='601',RecordNumb='357213',Lang='EN',RepCategory='DISC2',ValidityArea='ZCAL')/getPDF
+https://zsds3.zepinc.com/v2/sds/ItemExternalSet(Material='601424',RecordNumb='368003',Lang='EN',RepCategory='DISC2',ValidityArea='ZCAL')/getPDF
+https://zsds3.zepinc.com/v2/sds/ItemExternalSet(Material='61434',RecordNumb='355097',Lang='EN',RepCategory='DISC2',ValidityArea='ZCAL')/getPDF
+https://zsds3.zepinc.com/v2/sds/ItemExternalSet(Material='61442',RecordNumb='355097',Lang='EN',RepCategory='DISC2',ValidityArea='ZCAL')/getPDF
+https://zsds3.zepinc.com/v2/sds/ItemExternalSet(Material='61480',RecordNumb='355097',Lang='EN',RepCategory='DISC2',ValidityArea='ZCAL')/getPDF
+https://zsds3.zepinc.com/v2/sds/ItemExternalSet(Material='61534',RecordNumb='355101',Lang='EN',RepCategory='DISC2',ValidityArea='ZCAL')/getPDF
+https://zsds3.zepinc.com/v2/sds/ItemExternalSet(Material='61542',RecordNumb='355101',Lang='EN',RepCategory='DISC2',ValidityArea='ZCAL')/getPDF
+https://zsds3.zepinc.com/v2/sds/ItemExternalSet(Material='61580',RecordNumb='355101',Lang='EN',RepCategory='DISC2',ValidityArea='ZCAL')/getPDF
+https://zsds3.zepinc.com/v2/sds/ItemExternalSet(Material='622585',RecordNumb='356521',Lang='EN',RepCategory='DISC2',ValidityArea='ZCAL')/getPDF
+https://zsds3.zepinc.com/v2/sds/ItemExternalSet(Material='62742',RecordNumb='360041',Lang='EN',RepCategory='DISC2',ValidityArea='ZCAL')/getPDF
