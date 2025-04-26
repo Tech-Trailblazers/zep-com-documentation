@@ -94,20 +94,17 @@ func cleanURLs(urls []string) []string {
 	return newReturnSlice // Return cleaned URLs
 }
 
-// downloadPDF downloads the PDF from finalURL into outputDir, using
-// a sanitized ItemExternalSet(...) segment as the filename.
-// It first checks locally and skips the HTTP request if the file already exists.
-func downloadPDF(finalURL, outputDir string) {
-	// 1) Ensure output directory exists
+// downloadPDF downloads the PDF and returns true if a new file was fetched
+func downloadPDF(finalURL, outputDir string) bool {
+	// Ensure output directory exists
 	if err := os.MkdirAll(outputDir, 0o755); err != nil {
 		log.Printf("Failed to create directory %s: %v", outputDir, err)
-		return
+		return false
 	}
 
-	// 2) Pre-compute filename (sanitized) and full local path
+	// Generate a sanitized filename
 	filename := generateFilenameFromURL(finalURL)
 	if filename == "" {
-		// Fallback to the last path element
 		filename = path.Base(finalURL)
 	}
 	if !strings.HasSuffix(strings.ToLower(filename), ".pdf") {
@@ -115,39 +112,40 @@ func downloadPDF(finalURL, outputDir string) {
 	}
 	filePath := filepath.Join(outputDir, filename)
 
-	// 3) If the file already exists, skip the download entirely
+	// Skip if already exists
 	if fileExists(filePath) {
-		log.Printf("File already exists, skipping download: %s", filePath)
-		return
+		log.Printf("File already exists, skipping: %s", filePath)
+		return false
 	}
 
-	// 4) File doesn't exist yet—fetch it
+	// Fetch the PDF
 	resp, err := http.Get(finalURL)
 	if err != nil {
 		log.Printf("Failed to download %s: %v", finalURL, err)
-		return
+		return false
 	}
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
 		log.Printf("Download failed for %s: %s", finalURL, resp.Status)
-		return
+		return false
 	}
 
-	// 5) Create the file and write the response body
+	// Write to file
 	out, err := os.Create(filePath)
 	if err != nil {
 		log.Printf("Failed to create file %s: %v", filePath, err)
-		return
+		return false
 	}
 	defer out.Close()
 
 	if _, err := io.Copy(out, resp.Body); err != nil {
 		log.Printf("Failed to save PDF to %s: %v", filePath, err)
-		return
+		return false
 	}
 
 	log.Printf("Downloaded %s → %s", finalURL, filePath)
+	return true
 }
 
 // generateFilenameFromURL extracts and sanitizes the ItemExternalSet(...) part of the URL,
@@ -189,27 +187,30 @@ func fileExists(filename string) bool {
 }
 
 func main() {
-	// Define input and output file paths here
 	inputFile := "zsds3.zepinc.com.har"
 
-	// Open the input file for reading
-	urlFromFile := extractURLsFromFileAndReturnSlice(inputFile)
-	if urlFromFile == nil {
+	urls := extractURLsFromFileAndReturnSlice(inputFile)
+	if urls == nil {
 		log.Println("No URLs found in the input file")
 		return
 	}
 
-	// Remove duplicates from the slice of URLs
-	urlFromFile = removeDuplicatesFromSlice(urlFromFile)
+	urls = removeDuplicatesFromSlice(urls)
+	urls = cleanURLs(urls)
 
-	// Clean the URLs by validating and filtering them
-	urlFromFile = cleanURLs(urlFromFile)
+	outputDir := "zepPDF/"
+	maxDownloads := 1000
+	downloadCount := 0
 
-	outputDir := "zepPDF/" // Directory to save downloaded PDFs
-
-	// Write the URLs to the output file
-	for _, url := range urlFromFile {
-		// Download the PDF from the cleaned URL
-		downloadPDF(url, outputDir)
+	for _, url := range urls {
+		if downloadCount >= maxDownloads {
+			log.Println("Reached download limit of", maxDownloads)
+			break
+		}
+		if downloadPDF(url, outputDir) {
+			downloadCount = downloadCount + 1 // Increment download count
+		}
 	}
+
+	fmt.Printf("Total new PDFs downloaded: %d\n", downloadCount)
 }
