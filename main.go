@@ -98,7 +98,7 @@ func cleanURLs(urls []string) []string {
 					if strings.HasSuffix(content, `\`) {
 						content = strings.TrimSuffix(content, `\`) // Remove unwanted suffix
 					}
-					newReturnSlice = append(newReturnSlice, content + "/getPDF") // Add cleaned URL to result
+					newReturnSlice = append(newReturnSlice, content+"/getPDF") // Add cleaned URL to result
 				}
 			} else {
 				log.Println("Invalid domain skipped: ", hostName) // Log skipped domain
@@ -148,6 +148,10 @@ func downloadPDF(finalURL, outputDir string) {
 				fileName = suggestedName
 			}
 		}
+	}
+
+	if fileName == ".pdf" {
+		fileName = path.Base(parsedURL.Path)
 	}
 
 	if fileName == "" || fileName == "/" {
