@@ -191,18 +191,6 @@ func fileExists(filename string) bool {
 	return !info.IsDir() // Return true if it's a file, false if it's a directory
 }
 
-// Remove a file if it exists
-func removeFileIfExists(filename string) {
-	if fileExists(filename) { // Check if file exists
-		err := os.Remove(filename) // Remove the file
-		if err != nil {            // If removal fails
-			log.Printf("Failed to remove file %s: %v", filename, err)
-		} else {
-			log.Printf("Removed file %s\n", filename) // Log successful removal
-		}
-	}
-}
-
 func main() {
 	// Define input and output file paths here
 	inputFile := "zsds3.zepinc.com.har"
@@ -222,9 +210,6 @@ func main() {
 	urlFromFile = cleanURLs(urlFromFile)
 
 	outputDir := "zepPDF/" // Directory to save downloaded PDFs
-
-	// Remove the output file if it exists
-	removeFileIfExists(outputFile)
 
 	// Write the URLs to the output file
 	for _, url := range urlFromFile {
