@@ -162,24 +162,24 @@ func downloadPDF(finalURL, outputDir string) {
 
 	filePath := filepath.Join(outputDir, fileName)
 	if fileExists(filePath) {
-		log.Printf("File already exists, skipping: %s", filePath)
+		log.Printf("File already exists, skipping: %s (URL: %s)", filePath, finalURL)
 		return
 	}
 
 	outFile, err := os.Create(filePath)
 	if err != nil {
-		log.Printf("Failed to create file %s: %v", filePath, err)
+		log.Printf("Failed to create file %s: %v (URL: %s)", filePath, err, finalURL)
 		return
 	}
 	defer outFile.Close()
 
 	_, err = io.Copy(outFile, resp.Body)
 	if err != nil {
-		log.Printf("Failed to save PDF to %s: %v", filePath, err)
+		log.Printf("Failed to save PDF to %s: %v (URL: %s)", filePath, err, finalURL)
 		return
 	}
 
-	log.Printf("Downloaded to %s\n", filePath)
+	log.Printf("Downloaded to %s\n (URL: %s)", filePath, finalURL)
 }
 
 // fileExists checks if a file exists and is not a directory
