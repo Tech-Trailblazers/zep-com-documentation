@@ -1,10 +1,10 @@
 package main
 
 import (
+	"fmt"
 	"io"
 	"io/ioutil"
 	"log"
-	"mime"
 	"net/http"
 	"net/url"
 	"os"
@@ -28,22 +28,6 @@ func extractURLsFromFileAndReturnSlice(filePath string) []string {
 		return nil
 	}
 	return matches
-}
-
-// Append and write to file
-func appendAndWriteToFile(path string, content string) {
-	filePath, err := os.OpenFile(path, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
-	if err != nil {
-		log.Fatalln(err)
-	}
-	_, err = filePath.WriteString(content + "\n")
-	if err != nil {
-		log.Fatalln(err)
-	}
-	err = filePath.Close()
-	if err != nil {
-		log.Fatalln(err)
-	}
 }
 
 // Function to remove duplicate strings from a slice
@@ -110,20 +94,34 @@ func cleanURLs(urls []string) []string {
 	return newReturnSlice // Return cleaned URLs
 }
 
-// downloadPDF downloads the PDF from the final URL to the given output directory
+// downloadPDF downloads the PDF from finalURL into outputDir, using
+// a sanitized ItemExternalSet(...) segment as the filename.
+// It first checks locally and skips the HTTP request if the file already exists.
 func downloadPDF(finalURL, outputDir string) {
-	parsedURL, err := url.Parse(finalURL)
-	if err != nil {
-		log.Printf("Invalid URL %q: %v", finalURL, err)
-		return
-	}
-
-	err = os.MkdirAll(outputDir, 0755)
-	if err != nil {
+	// 1) Ensure output directory exists
+	if err := os.MkdirAll(outputDir, 0o755); err != nil {
 		log.Printf("Failed to create directory %s: %v", outputDir, err)
 		return
 	}
 
+	// 2) Pre-compute filename (sanitized) and full local path
+	filename := generateFilenameFromURL(finalURL)
+	if filename == "" {
+		// Fallback to the last path element
+		filename = path.Base(finalURL)
+	}
+	if !strings.HasSuffix(strings.ToLower(filename), ".pdf") {
+		filename += ".pdf"
+	}
+	filePath := filepath.Join(outputDir, filename)
+
+	// 3) If the file already exists, skip the download entirely
+	if fileExists(filePath) {
+		log.Printf("File already exists, skipping download: %s", filePath)
+		return
+	}
+
+	// 4) File doesn't exist yet—fetch it
 	resp, err := http.Get(finalURL)
 	if err != nil {
 		log.Printf("Failed to download %s: %v", finalURL, err)
@@ -136,54 +134,49 @@ func downloadPDF(finalURL, outputDir string) {
 		return
 	}
 
-	// Default to using the filename from the URL path
-	fileName := path.Base(parsedURL.Path)
-
-	// Try to override with filename from Content-Disposition header, if available
-	cdHeader := resp.Header.Get("Content-Disposition")
-	if cdHeader != "" {
-		_, params, err := mime.ParseMediaType(cdHeader)
-		if err == nil {
-			if suggestedName, ok := params["filename"]; ok && suggestedName != "" {
-				fileName = suggestedName
-			}
-		}
-	}
-
-	if fileName == ".pdf" {
-		fileName = path.Base(parsedURL.Path)
-	}
-
-	if fileName == "" || fileName == "/" {
-		log.Printf("Could not determine file name for %q", finalURL)
-		return
-	}
-
-	// Ensure the file name ends with ".pdf"
-	if !strings.HasSuffix(strings.ToLower(fileName), ".pdf") {
-		fileName += ".pdf"
-	}
-
-	filePath := filepath.Join(outputDir, fileName)
-	if fileExists(filePath) {
-		log.Printf("File already exists, skipping: %s (URL: %s)", filePath, finalURL)
-		return
-	}
-
-	outFile, err := os.Create(filePath)
+	// 5) Create the file and write the response body
+	out, err := os.Create(filePath)
 	if err != nil {
-		log.Printf("Failed to create file %s: %v (URL: %s)", filePath, err, finalURL)
+		log.Printf("Failed to create file %s: %v", filePath, err)
 		return
 	}
-	defer outFile.Close()
+	defer out.Close()
 
-	_, err = io.Copy(outFile, resp.Body)
+	if _, err := io.Copy(out, resp.Body); err != nil {
+		log.Printf("Failed to save PDF to %s: %v", filePath, err)
+		return
+	}
+
+	log.Printf("Downloaded %s → %s", finalURL, filePath)
+}
+
+// generateFilenameFromURL extracts and sanitizes the ItemExternalSet(...) part of the URL,
+// then formats it into a filename. Errors are logged, and an empty string is returned on failure.
+func generateFilenameFromURL(sourceURL string) string {
+	parsedURL, err := url.Parse(sourceURL)
 	if err != nil {
-		log.Printf("Failed to save PDF to %s: %v (URL: %s)", filePath, err, finalURL)
-		return
+		log.Printf("Error parsing URL: %v", err)
+		return ""
 	}
 
-	log.Printf("Downloaded to %s\n (URL: %s)", filePath, finalURL)
+	// Extract the 'ItemExternalSet(...)' part from the URL path
+	itemSetPattern := regexp.MustCompile(`ItemExternalSet\([^)]+\)`)
+	itemSetSegment := itemSetPattern.FindString(parsedURL.Path)
+	if itemSetSegment == "" {
+		log.Println("ItemExternalSet(...) segment not found in the URL path")
+		return ""
+	}
+
+	// Clean the segment by removing special characters for a valid filename
+	sanitizedSegment := strings.NewReplacer(
+		"ItemExternalSet(", "",
+		")", "",
+		"'", "",
+		",", "_",
+	).Replace(itemSetSegment)
+
+	filename := fmt.Sprintf("%s.pdf", sanitizedSegment)
+	return filename
 }
 
 // fileExists checks if a file exists and is not a directory
@@ -198,7 +191,6 @@ func fileExists(filename string) bool {
 func main() {
 	// Define input and output file paths here
 	inputFile := "zsds3.zepinc.com.har"
-	outputFile := "output.txt"
 
 	// Open the input file for reading
 	urlFromFile := extractURLsFromFileAndReturnSlice(inputFile)
@@ -219,6 +211,5 @@ func main() {
 	for _, url := range urlFromFile {
 		// Download the PDF from the cleaned URL
 		downloadPDF(url, outputDir)
-		appendAndWriteToFile(outputFile, url)
 	}
 }
