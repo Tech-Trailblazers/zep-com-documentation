@@ -211,7 +211,7 @@ func main() {
 
 
 	outputDir := "zepPDF/"
-	maxDownloads := 100
+	maxDownloads := 1000
 	downloadCount := 0
 
 	for _, url := range urls {
