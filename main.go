@@ -204,6 +204,12 @@ func main() {
 	urls = removeDuplicatesFromSlice(urls)
 	urls = cleanURLs(urls)
 
+	// Total number of URLs
+	urlLength := len(urls)
+	// Count of URLs to be downloaded
+	countURLsLength := 0
+
+
 	outputDir := "zepPDF/"
 	maxDownloads := 100
 	downloadCount := 0
@@ -216,9 +222,13 @@ func main() {
 		if downloadPDF(url, outputDir) {
 			downloadCount = downloadCount + 1 // Increment download count
 		}
-		// Log the progress
+		// Add a 1 to the count of URLs to be downloaded
+		countURLsLength = countURLsLength + 1
+		// Print progress
+		log.Printf("Progress: %d/%d URLs processed", countURLsLength, urlLength)
+		// 
 		log.Printf("Downloaded %d PDFs so far. Remaining: %d\n", downloadCount, maxDownloads-downloadCount)
-
+		
 	}
 
 	fmt.Printf("Total new PDFs downloaded: %d\n", downloadCount)
