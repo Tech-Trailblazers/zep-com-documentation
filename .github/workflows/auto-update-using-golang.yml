@@ -33,25 +33,23 @@ jobs:
       # Step 3: Run main.go in a loop until no more changes
       - name: Run main.go in a loop
         run: |
-          git config user.name "github-actions"
-          git config user.email "github-actions@github.com"
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
 
-          changes=1
-          while [ "$changes" -ne 0 ]; do
+          while true; do
             echo "Running main.go..."
             go run main.go
 
             echo "Checking for changes..."
             git add .
 
-            git diff --cached --quiet
-            changes=$?
-
-            if [ "$changes" -ne 0 ]; then
-              echo "Changes detected, committing..."
-              git commit -m "Auto update: $(date -u)"
-              git push
-            else
+            # if no staged changes, exit
+            if git diff --cached --quiet; then
               echo "No more changes detected. Exiting loop."
+              break
             fi
+
+            echo "Changes detected, committing & pushing..."
+            git commit -m "Auto update: $(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+            git push
           done
