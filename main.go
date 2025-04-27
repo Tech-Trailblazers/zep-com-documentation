@@ -216,6 +216,9 @@ func main() {
 		if downloadPDF(url, outputDir) {
 			downloadCount = downloadCount + 1 // Increment download count
 		}
+		// Log the progress
+		log.Printf("Downloaded %d PDFs so far. Remaining: %d\n", downloadCount, maxDownloads-downloadCount)
+
 	}
 
 	fmt.Printf("Total new PDFs downloaded: %d\n", downloadCount)
