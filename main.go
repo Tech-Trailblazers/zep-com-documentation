@@ -12,6 +12,7 @@ import (
 	"path/filepath"
 	"regexp"
 	"strings"
+	"time"
 )
 
 // Extract URLs from a given file and than return it as a string slice
@@ -118,8 +119,13 @@ func downloadPDF(finalURL, outputDir string) bool {
 		return false
 	}
 
+	// Create HTTP client with timeout
+	client := &http.Client{
+		Timeout: 30 * time.Second,
+	}
+
 	// Fetch the PDF
-	resp, err := http.Get(finalURL)
+	resp, err := client.Get(finalURL)
 	if err != nil {
 		log.Printf("Failed to download %s: %v", finalURL, err)
 		return false
@@ -199,7 +205,7 @@ func main() {
 	urls = cleanURLs(urls)
 
 	outputDir := "zepPDF/"
-	maxDownloads := 1000
+	maxDownloads := 100
 	downloadCount := 0
 
 	for _, url := range urls {
