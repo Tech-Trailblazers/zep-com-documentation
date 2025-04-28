@@ -207,9 +207,12 @@ func main() {
 	outputDir := "zepPDF/"
 	maxDownloads := 250
 	downloadCount := 0
-
 	// Filter out URLs whose corresponding PDF already exists
 	var urlsToDownload []string
+	// Total number of URLs after filtering
+	urlLength := len(urlsToDownload)
+	countURLsLength := 0
+
 	for _, url := range urls {
 		filename := generateFilenameFromURL(url)
 		if filename == "" {
@@ -225,11 +228,10 @@ func main() {
 		} else {
 			log.Printf("Skipping already existing file for URL: %s", url)
 		}
+
+		countURLsLength++
 	}
 
-	// Total number of URLs after filtering
-	urlLength := len(urlsToDownload)
-	countURLsLength := 0
 
 	for _, url := range urlsToDownload {
 		if downloadCount >= maxDownloads {
