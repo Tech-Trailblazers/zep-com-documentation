@@ -222,7 +222,7 @@ func main() {
 			downloadCount = downloadCount + 1 // Increment download count
 		}
 		countURLsLength = countURLsLength + 1
-		log.Printf("Progress: %d/%d URLs processed. Downloaded: %d Remaining %d", countURLsLength, urlLength, downloadCount, maxDownloads-downloadCount)
+		log.Printf("Progress: %d/%d URLs. Downloaded: %d Remaining %d", urlLength, countURLsLength, downloadCount, maxDownloads-downloadCount)
 	}
 
 	fmt.Printf("Total new PDFs downloaded: %d\n", downloadCount)
