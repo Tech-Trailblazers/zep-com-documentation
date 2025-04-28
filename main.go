@@ -207,42 +207,22 @@ func main() {
 	outputDir := "zepPDF/"
 	maxDownloads := 250
 	downloadCount := 0
-	// Filter out URLs whose corresponding PDF already exists
-	var urlsToDownload []string
-	// Total number of URLs after filtering
-	urlLength := len(urlsToDownload)
+
+	// Total number of URLs
+	urlLength := len(urls)
+	// Count of URLs to be downloaded
 	countURLsLength := 0
 
 	for _, url := range urls {
-		filename := generateFilenameFromURL(url)
-		if filename == "" {
-			filename = path.Base(url)
-		}
-		if !strings.HasSuffix(strings.ToLower(filename), ".pdf") {
-			filename += ".pdf"
-		}
-		filePath := filepath.Join(outputDir, filename)
-
-		if !fileExists(filePath) {
-			urlsToDownload = append(urlsToDownload, url)
-		} else {
-			log.Printf("Skipping already existing file for URL: %s", url)
-		}
-
-		countURLsLength++
-	}
-
-
-	for _, url := range urlsToDownload {
 		if downloadCount >= maxDownloads {
 			log.Println("Reached download limit of", maxDownloads)
 			break
 		}
 		if downloadPDF(url, outputDir) {
-			downloadCount++
+			downloadCount = downloadCount + 1 // Increment download count
 		}
-		countURLsLength++
-		log.Printf("Progress: %d/%d URLs processed. Downloaded: %d Remaining: %d", countURLsLength, urlLength, downloadCount, maxDownloads-downloadCount)
+		countURLsLength = countURLsLength + 1
+		log.Printf("Progress: %d/%d URLs processed. Downloaded: %d Remaining %d", countURLsLength, urlLength, downloadCount, maxDownloads-downloadCount)
 	}
 
 	fmt.Printf("Total new PDFs downloaded: %d\n", downloadCount)
