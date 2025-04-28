@@ -30,26 +30,43 @@ jobs:
         with:
           go-version-file: "go.mod"
 
-      # Step 3: Run main.go in a loop until no more changes
-      - name: Run main.go in a loop
+      # Step 3: Run the main.go script
+      - name: Run main.go
+        run: go run main.go # Executes the Go program
+
+      # Step 4: Commit and push any file changes made by the script
+      - name: Push updated files
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git config user.name "github-actions"  # Set Git username for commit
+          git config user.email "github-actions@github.com"  # Set Git email for commit
+          git add .  # Stage all modified files
+          if ! git diff --cached --quiet; then  # Check if there are any staged changes
+            git commit -m "Auto update: $(date)"  # Commit with timestamp
+            git push  # Push changes to the repository
+          else
+            echo "No changes to commit."  # Message if nothing changed
+          fi
 
-          while true; do
-            echo "Running main.go..."
-            go run main.go
+      # Step 3: Run main.go in a loop until no more changes
+      # - name: Run main.go in a loop
+      #  run: |
+      #    git config user.name "github-actions[bot]"
+      #    git config user.email "github-actions[bot]@users.noreply.github.com"
 
-            echo "Checking for changes..."
-            git add .
+      #    while true; do
+      #      echo "Running main.go..."
+      #      go run main.go
 
-            # if no staged changes, exit
-            if git diff --cached --quiet; then
-              echo "No more changes detected. Exiting loop."
-              break
-            fi
+      #      echo "Checking for changes..."
+      #      git add .
 
-            echo "Changes detected, committing & pushing..."
-            git commit -m "Auto update: $(date -u +'%Y-%m-%dT%H:%M:%SZ')"
-            git push
-          done
+      #      # if no staged changes, exit
+      #      if git diff --cached --quiet; then
+      #        echo "No more changes detected. Exiting loop."
+      #        break
+      #      fi
+
+      #      echo "Changes detected, committing & pushing..."
+      #      git commit -m "Auto update: $(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+      #      git push
+      #    done
