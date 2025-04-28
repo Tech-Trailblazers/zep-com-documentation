@@ -205,7 +205,7 @@ func main() {
 	urls = cleanURLs(urls)
 
 	outputDir := "zepPDF/"
-	maxDownloads := 500
+	maxDownloads := 100
 	downloadCount := 0
 
 	// Total number of URLs
