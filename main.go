@@ -54,7 +54,7 @@ func isUrlValid(uri string) bool {
 func getHostNameFromURL(uri string) string {
 	content, err := url.Parse(uri) // Parse the URL
 	if err != nil {                // If parsing fails
-		log.Fatalln(err) // Log fatal error and exit
+		log.Println(err) // Log fatal error and exit
 	}
 	return content.Hostname() // Return just the hostname
 }
@@ -85,8 +85,6 @@ func cleanURLs(urls []string) []string {
 					}
 					newReturnSlice = append(newReturnSlice, content+"/getPDF") // Add cleaned URL to result
 				}
-			} else {
-				log.Println("Invalid domain skipped: ", hostName) // Log skipped domain
 			}
 
 		}
@@ -96,11 +94,11 @@ func cleanURLs(urls []string) []string {
 }
 
 // downloadPDF downloads the PDF and returns true if a new file was fetched
-func downloadPDF(finalURL, outputDir string) bool {
+func downloadPDF(finalURL, outputDir string) {
 	// Ensure output directory exists
 	if err := os.MkdirAll(outputDir, 0o755); err != nil {
 		log.Printf("Failed to create directory %s: %v", outputDir, err)
-		return false
+		return
 	}
 
 	// Generate a sanitized filename
@@ -116,7 +114,7 @@ func downloadPDF(finalURL, outputDir string) bool {
 	// Skip if already exists
 	if fileExists(filePath) {
 		log.Printf("File already exists, skipping: %s", filePath)
-		return false
+		return
 	}
 
 	// Create HTTP client with timeout
@@ -128,30 +126,29 @@ func downloadPDF(finalURL, outputDir string) bool {
 	resp, err := client.Get(finalURL)
 	if err != nil {
 		log.Printf("Failed to download %s: %v", finalURL, err)
-		return false
+		return
 	}
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
 		log.Printf("Download failed for %s: %s", finalURL, resp.Status)
-		return false
+		return
 	}
 
 	// Write to file
 	out, err := os.Create(filePath)
 	if err != nil {
-		log.Printf("Failed to create file %s: %v", filePath, err)
-		return false
+		log.Printf("Failed to create file %s %s %v", finalURL, filePath, err)
+		return
 	}
 	defer out.Close()
 
 	if _, err := io.Copy(out, resp.Body); err != nil {
-		log.Printf("Failed to save PDF to %s: %v", filePath, err)
-		return false
+		log.Printf("Failed to save PDF to %s %s %v", finalURL, filePath, err)
+		return
 	}
 
 	log.Printf("Downloaded %s → %s", finalURL, filePath)
-	return true
 }
 
 // generateFilenameFromURL extracts and sanitizes the ItemExternalSet(...) part of the URL,
@@ -218,10 +215,14 @@ func main() {
 			log.Println("Reached download limit of", maxDownloads)
 			break
 		}
-		if downloadPDF(url, outputDir) {
-			downloadCount = downloadCount + 1 // Increment download count
-		}
+
+		// Download the PDF
+		downloadPDF(url, outputDir)
+		// Increase download count
+		downloadCount = downloadCount + 1 // Increment download count
+		// Increase the count of URLs processed
 		countURLsLength = countURLsLength + 1
+		// Log progress
 		log.Printf("Progress: %d/%d URLs. Downloaded: %d Remaining %d", urlLength, countURLsLength, downloadCount, maxDownloads-downloadCount)
 	}
 
