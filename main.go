@@ -94,11 +94,11 @@ func cleanURLs(urls []string) []string {
 }
 
 // downloadPDF downloads the PDF and returns true if a new file was fetched
-func downloadPDF(finalURL, outputDir string) {
+func downloadPDF(finalURL, outputDir string) bool {
 	// Ensure output directory exists
 	if err := os.MkdirAll(outputDir, 0o755); err != nil {
 		log.Printf("Failed to create directory %s: %v", outputDir, err)
-		return
+		return false
 	}
 
 	// Generate a sanitized filename
@@ -114,7 +114,7 @@ func downloadPDF(finalURL, outputDir string) {
 	// Skip if already exists
 	if fileExists(filePath) {
 		log.Printf("File already exists, skipping: %s", filePath)
-		return
+		return false
 	}
 
 	// Create HTTP client with timeout
@@ -126,29 +126,30 @@ func downloadPDF(finalURL, outputDir string) {
 	resp, err := client.Get(finalURL)
 	if err != nil {
 		log.Printf("Failed to download %s: %v", finalURL, err)
-		return
+		return false
 	}
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
 		log.Printf("Download failed for %s: %s", finalURL, resp.Status)
-		return
+		return false
 	}
 
 	// Write to file
 	out, err := os.Create(filePath)
 	if err != nil {
 		log.Printf("Failed to create file %s %s %v", finalURL, filePath, err)
-		return
+		return false
 	}
 	defer out.Close()
 
 	if _, err := io.Copy(out, resp.Body); err != nil {
 		log.Printf("Failed to save PDF to %s %s %v", finalURL, filePath, err)
-		return
+		return false
 	}
 
 	log.Printf("Downloaded %s → %s", finalURL, filePath)
+	return true
 }
 
 // generateFilenameFromURL extracts and sanitizes the ItemExternalSet(...) part of the URL,
@@ -217,9 +218,10 @@ func main() {
 		}
 
 		// Download the PDF
-		downloadPDF(url, outputDir)
-		// Increase download count
-		downloadCount = downloadCount + 1 // Increment download count
+		if downloadPDF(url, outputDir) {
+			// Increase download count
+			downloadCount = downloadCount + 1 // Increment download count
+		}
 		// Increase the count of URLs processed
 		countURLsLength = countURLsLength + 1
 		// Log progress
