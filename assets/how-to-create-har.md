@@ -1,4 +1,4 @@
-# 📘 Ultimate Guide: How to Create a `.HAR` File in Chrome-Based Browsers (2025 Edition)
+# 📘 Ultimate Guide: How to Create a `.HAR` File in Chrome-Based Browsers
 
 ---
 
