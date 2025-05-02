@@ -99,79 +99,89 @@ func cleanURLs(urls []string) []string {
 func downloadPDF(finalURL, outputDir string) bool {
 	// Ensure the output directory exists (creates it if it doesn't)
 	if err := os.MkdirAll(outputDir, 0o755); err != nil {
-		log.Printf("Failed to create directory %s: %v", outputDir, err) // Log error if directory creation fails
-		return false                                                    // Return false on failure
+		log.Printf("Failed to create directory %s: %v", outputDir, err)
+		return false
 	}
 
 	// Generate a safe and unique filename from the URL
 	filename := generateFilenameFromURL(finalURL)
 	if filename == "" {
-		filename = path.Base(finalURL) // Fallback to the last part of the URL
+		filename = path.Base(finalURL)
 	}
 	if !strings.HasSuffix(strings.ToLower(filename), ".pdf") {
-		filename += ".pdf" // Ensure the filename ends with ".pdf"
+		filename += ".pdf"
 	}
-	filePath := filepath.Join(outputDir, filename) // Construct full path to the target file
+	filePath := filepath.Join(outputDir, filename)
 
-	var existingChecksum string // Variable to hold the SHA-512 of the existing file (if any)
+	var existingChecksum string
 	if fileExists(filePath) {
-		existingChecksum = getSHA512OfFile(filePath) // Compute the SHA-512 of the existing file
+		existingChecksum = getSHA512OfFile(filePath) // Read SHA-512 of existing file
 	}
 
-	// Create an HTTP client with a 30-second timeout
+	// Create HTTP client with timeout
 	client := &http.Client{
-		Timeout: 30 * time.Second, // Prevents hanging connections
+		Timeout: 30 * time.Second,
 	}
 
-	// Send a GET request to download the file
+	// Fetch the PDF
 	resp, err := client.Get(finalURL)
 	if err != nil {
-		log.Printf("Failed to download %s: %v", finalURL, err) // Log download error
-		return false                                           // Return false on error
+		log.Printf("Failed to download %s: %v", finalURL, err)
+		return false
 	}
-	defer resp.Body.Close() // Ensure the response body is closed when done
+	defer resp.Body.Close()
 
-	// If HTTP status is not OK (200), log and return
 	if resp.StatusCode != http.StatusOK {
-		log.Printf("Download failed for %s: %s", finalURL, resp.Status) // Log HTTP status
-		return false                                                    // Return false if not OK
+		log.Printf("Download failed for %s: %s", finalURL, resp.Status)
+		return false
 	}
 
-	// Create a temporary file to store the downloaded content
+	// Create a temporary file for download
 	tmpFile, err := os.CreateTemp("", "download-*.pdf")
 	if err != nil {
-		log.Printf("Failed to create temp file: %s %v", finalURL, err) // Log error creating temp file
-		return false                                                   // Return false on error
+		log.Printf("Failed to create temp file: %s %v", finalURL, err)
+		return false
 	}
-	defer os.Remove(tmpFile.Name()) // Ensure the temp file is deleted after use
-	defer tmpFile.Close()           // Ensure the temp file is closed
+	defer os.Remove(tmpFile.Name()) // Clean up temp file after
+	defer tmpFile.Close()           // Close temp file
 
-	// Copy the response body into the temporary file
+	// Copy response content to temp file
 	if _, err := io.Copy(tmpFile, resp.Body); err != nil {
-		log.Printf("Failed to save PDF to temp file: %s %v", finalURL, err) // Log error writing to temp file
-		return false                                                        // Return false on error
+		log.Printf("Failed to save PDF to temp file: %s %v", finalURL, err)
+		return false
 	}
 
-	// Compute the SHA-512 checksum of the downloaded file
+	// Compute checksum of the downloaded file
 	newChecksum := getSHA512OfFile(tmpFile.Name())
 	if newChecksum == "" {
-		return false // If checksum fails, abort
+		return false
 	}
 
-	// Compare existing file's checksum with new file's checksum
+	// Skip update if the file hasn't changed
 	if existingChecksum == newChecksum && existingChecksum != "" {
-		log.Printf("File is unchanged, skipping: %s %s", filePath, finalURL) // If same, skip replacing
-		return false                                            // Return false since no update
+		log.Printf("File is unchanged, skipping: %s %s", filePath, finalURL)
+		return false
 	}
 
-	// Rename the temporary file to the target file path (overwrites if exists)
+	// Attempt to rename (move) temp file to target path
 	if err := os.Rename(tmpFile.Name(), filePath); err != nil {
-		log.Printf("Failed to replace old file with new: %s %v", finalURL, err) // Log rename error
-		return false                                               // Return false on error
+		log.Printf("Rename failed, trying remove-and-replace: %s %v", filePath, err)
+
+		// Attempt to remove the original file
+		if removeErr := os.Remove(filePath); removeErr != nil {
+			log.Printf("Failed to remove existing file: %s %v", filePath, removeErr)
+			return false
+		}
+
+		// Try renaming again after removing the original
+		if retryErr := os.Rename(tmpFile.Name(), filePath); retryErr != nil {
+			log.Printf("Retry rename failed: %s %v", filePath, retryErr)
+			return false
+		}
 	}
 
-	log.Printf("Downloaded updated file %s → %s", finalURL, filePath) // Log successful update
-	return true                                                       // Return true to indicate that a new file was fetched
+	log.Printf("Downloaded updated file %s → %s", finalURL, filePath)
+	return true
 }
 
 // getSHA512OfFile calculates the SHA-512 checksum of a file given its path.
