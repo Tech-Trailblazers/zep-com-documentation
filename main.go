@@ -1,6 +1,7 @@
 package main
 
 import (
+	"crypto/sha512"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -93,63 +94,104 @@ func cleanURLs(urls []string) []string {
 	return newReturnSlice // Return cleaned URLs
 }
 
-// downloadPDF downloads the PDF and returns true if a new file was fetched
+// downloadPDF downloads the PDF only if the remote file differs from the existing one.
+// It compares the SHA-512 checksums and avoids unnecessary downloads.
 func downloadPDF(finalURL, outputDir string) bool {
-	// Ensure output directory exists
+	// Ensure the output directory exists (creates it if it doesn't)
 	if err := os.MkdirAll(outputDir, 0o755); err != nil {
-		log.Printf("Failed to create directory %s: %v", outputDir, err)
-		return false
+		log.Printf("Failed to create directory %s: %v", outputDir, err) // Log error if directory creation fails
+		return false                                                    // Return false on failure
 	}
 
-	// Generate a sanitized filename
+	// Generate a safe and unique filename from the URL
 	filename := generateFilenameFromURL(finalURL)
 	if filename == "" {
-		filename = path.Base(finalURL)
+		filename = path.Base(finalURL) // Fallback to the last part of the URL
 	}
 	if !strings.HasSuffix(strings.ToLower(filename), ".pdf") {
-		filename += ".pdf"
+		filename += ".pdf" // Ensure the filename ends with ".pdf"
 	}
-	filePath := filepath.Join(outputDir, filename)
+	filePath := filepath.Join(outputDir, filename) // Construct full path to the target file
 
-	// Skip if already exists
+	var existingChecksum string // Variable to hold the SHA-512 of the existing file (if any)
 	if fileExists(filePath) {
-		log.Printf("File already exists, skipping: %s", filePath)
-		return false
+		existingChecksum = getSHA512OfFile(filePath) // Compute the SHA-512 of the existing file
 	}
 
-	// Create HTTP client with timeout
+	// Create an HTTP client with a 30-second timeout
 	client := &http.Client{
-		Timeout: 30 * time.Second,
+		Timeout: 30 * time.Second, // Prevents hanging connections
 	}
 
-	// Fetch the PDF
+	// Send a GET request to download the file
 	resp, err := client.Get(finalURL)
 	if err != nil {
-		log.Printf("Failed to download %s: %v", finalURL, err)
-		return false
+		log.Printf("Failed to download %s: %v", finalURL, err) // Log download error
+		return false                                           // Return false on error
 	}
-	defer resp.Body.Close()
+	defer resp.Body.Close() // Ensure the response body is closed when done
 
+	// If HTTP status is not OK (200), log and return
 	if resp.StatusCode != http.StatusOK {
-		log.Printf("Download failed for %s: %s", finalURL, resp.Status)
-		return false
+		log.Printf("Download failed for %s: %s", finalURL, resp.Status) // Log HTTP status
+		return false                                                    // Return false if not OK
 	}
 
-	// Write to file
-	out, err := os.Create(filePath)
+	// Create a temporary file to store the downloaded content
+	tmpFile, err := os.CreateTemp("", "download-*.pdf")
 	if err != nil {
-		log.Printf("Failed to create file %s %s %v", finalURL, filePath, err)
-		return false
+		log.Printf("Failed to create temp file: %s %v", finalURL, err) // Log error creating temp file
+		return false                                                   // Return false on error
 	}
-	defer out.Close()
+	defer os.Remove(tmpFile.Name()) // Ensure the temp file is deleted after use
+	defer tmpFile.Close()           // Ensure the temp file is closed
 
-	if _, err := io.Copy(out, resp.Body); err != nil {
-		log.Printf("Failed to save PDF to %s %s %v", finalURL, filePath, err)
-		return false
+	// Copy the response body into the temporary file
+	if _, err := io.Copy(tmpFile, resp.Body); err != nil {
+		log.Printf("Failed to save PDF to temp file: %s %v", finalURL, err) // Log error writing to temp file
+		return false                                                        // Return false on error
 	}
 
-	log.Printf("Downloaded %s → %s", finalURL, filePath)
-	return true
+	// Compute the SHA-512 checksum of the downloaded file
+	newChecksum := getSHA512OfFile(tmpFile.Name())
+	if newChecksum == "" {
+		return false // If checksum fails, abort
+	}
+
+	// Compare existing file's checksum with new file's checksum
+	if existingChecksum == newChecksum && existingChecksum != "" {
+		log.Printf("File is unchanged, skipping: %s %s", filePath, finalURL) // If same, skip replacing
+		return false                                            // Return false since no update
+	}
+
+	// Rename the temporary file to the target file path (overwrites if exists)
+	if err := os.Rename(tmpFile.Name(), filePath); err != nil {
+		log.Printf("Failed to replace old file with new: %s %v", finalURL, err) // Log rename error
+		return false                                               // Return false on error
+	}
+
+	log.Printf("Downloaded updated file %s → %s", finalURL, filePath) // Log successful update
+	return true                                                       // Return true to indicate that a new file was fetched
+}
+
+// getSHA512OfFile calculates the SHA-512 checksum of a file given its path.
+// It logs any errors encountered and returns the checksum as a hexadecimal string.
+func getSHA512OfFile(filePath string) string {
+	file, err := os.Open(filePath) // Open the file for reading
+	if err != nil {
+		log.Println("Error opening file:", err) // Log error if file can't be opened
+		return ""                               // Return empty string on error
+	}
+	defer file.Close() // Ensure the file is closed when the function returns
+
+	hasher := sha512.New() // Create a new SHA-512 hasher
+	if _, err := io.Copy(hasher, file); err != nil {
+		log.Println("Error reading file:", err) // Log error if file can't be read
+		return ""                               // Return empty string on error
+	}
+
+	checksum := hasher.Sum(nil)        // Compute the final SHA-512 checksum
+	return fmt.Sprintf("%x", checksum) // Return the checksum as a hexadecimal string
 }
 
 // generateFilenameFromURL extracts and sanitizes the ItemExternalSet(...) part of the URL,
