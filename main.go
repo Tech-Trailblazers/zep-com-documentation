@@ -1,232 +1,287 @@
 package main
 
 import (
-	"fmt"
-	"io"
-	"io/ioutil"
-	"log"
-	"net/http"
-	"net/url"
-	"os"
-	"path"
-	"path/filepath"
-	"regexp"
-	"strings"
-	"time"
+	"encoding/csv"  // Package to read/write CSV files
+	"fmt"           // Package for formatted I/O
+	"io"            // Core I/O primitives
+	"io/ioutil"     // Deprecated: used for reading whole files (still functional)
+	"log"           // Logging utilities
+	"net/http"      // HTTP client and server implementations
+	"net/url"       // URL parsing and formatting
+	"os"            // OS file and directory operations
+	"path"          // Utilities for manipulating slash-separated paths
+	"path/filepath" // OS-aware file path utilities
+	"regexp"        // Regular expressions for pattern matching
+	"strings"       // String manipulation functions
+	"time"          // Time functions and types
 )
 
-// Extract URLs from a given file and than return it as a string slice
+// Reads a file, extracts all URLs using regex, and returns them as a slice of strings
 func extractURLsFromFileAndReturnSlice(filePath string) []string {
-	content, err := ioutil.ReadFile(filePath)
+	content, err := ioutil.ReadFile(filePath) // Read entire file content into memory
 	if err != nil {
-		log.Println("Error reading file:", err)
-		return nil
+		log.Println("Error reading file:", err) // Log error if reading fails
+		return nil                              // Return nil to indicate failure
 	}
-	regexContent := regexp.MustCompile(`http[s]?://[^\s"]+`)
-	matches := regexContent.FindAllString(string(content), -1)
+	regexContent := regexp.MustCompile(`http[s]?://[^\s"]+`)   // Regex to match URLs
+	matches := regexContent.FindAllString(string(content), -1) // Find all URL matches
 	if len(matches) == 0 {
-		log.Println("No URLs found in the file")
-		return nil
+		log.Println("No URLs found in the file") // Inform if no URLs were found
+		return nil                               // Return nil if no matches
 	}
-	return matches
+	return matches // Return matched URLs
 }
 
-// Function to remove duplicate strings from a slice
+// Removes duplicate strings from a slice and returns a new slice with unique values
 func removeDuplicatesFromSlice(slice []string) []string {
-	check := make(map[string]bool)  // Map to track seen strings
-	var newReturnSlice []string     // Slice for unique strings
-	for _, content := range slice { // Loop through original slice
-		if !check[content] { // If not already seen
-			check[content] = true                            // Mark as seen
+	check := make(map[string]bool)  // Map to track already seen strings
+	var newReturnSlice []string     // Result slice for unique values
+	for _, content := range slice { // Iterate through input slice
+		if !check[content] { // If string not already seen
+			check[content] = true                            // Mark string as seen
 			newReturnSlice = append(newReturnSlice, content) // Add to result
 		}
 	}
-	return newReturnSlice // Return de-duplicated slice
+	return newReturnSlice // Return deduplicated slice
 }
 
-// Function to check if a URL string is valid
+// Checks whether a URL string is syntactically valid
 func isUrlValid(uri string) bool {
-	_, err := url.ParseRequestURI(uri) // Try to parse the URL
-	return err == nil                  // Return true if no error (valid URL)
+	_, err := url.ParseRequestURI(uri) // Attempt to parse the URL
+	return err == nil                  // Return true if no error occurred
 }
 
-// Function to extract the hostname from a URL
+// Extracts the hostname from a given URL string
 func getHostNameFromURL(uri string) string {
-	content, err := url.Parse(uri) // Parse the URL
+	content, err := url.Parse(uri) // Parse URL into structured form
 	if err != nil {                // If parsing fails
-		log.Println(err) // Log fatal error and exit
+		log.Println(err) // Log the error
 	}
-	return content.Hostname() // Return just the hostname
+	return content.Hostname() // Return just the hostname part
 }
 
-// Function to clean URLs by validating and filtering by allowed domains
+// Filters URLs by validating them and checking if they match allowed domain and path pattern
 func cleanURLs(urls []string) []string {
-	validDomains := []string{"zsds3.zepinc.com"} // Allowed hostnames
-	var newReturnSlice []string                  // Slice for valid, cleaned URLs
+	validDomains := []string{"zsds3.zepinc.com"} // List of allowed hostnames
+	var newReturnSlice []string                  // Resulting valid and cleaned URLs
 
-	for _, content := range urls { // Loop through all URLs
-		if isUrlValid(content) { // If the URL is valid
+	for _, content := range urls { // Iterate through input URLs
+		if isUrlValid(content) { // If URL is valid
 			hostName := getHostNameFromURL(content) // Extract hostname
-
-			isValid := false                      // Flag to check if domain is allowed
-			for _, domain := range validDomains { // Loop through allowed domains
-				if hostName == domain { // If domain matches
+			isValid := false                        // Flag to check if domain is allowed
+			for _, domain := range validDomains {   // Check each valid domain
+				if hostName == domain { // If hostname matches allowed domain
 					isValid = true // Mark as valid
-					break          // Stop checking
+					break          // Exit inner loop
 				}
 			}
-
-			if isValid { // If URL is from valid domain
-				// Check if the prefix matches `https://zsds3.zepinc.com/v2/sds/ItemExternalSet(Material=`
+			if isValid { // If domain is allowed
 				if strings.HasPrefix(content, "https://zsds3.zepinc.com/v2/sds/ItemExternalSet(Material=") {
-					// Remove the suffix `\` if it exists
-					if strings.HasSuffix(content, `\`) {
-						content = strings.TrimSuffix(content, `\`) // Remove unwanted suffix
+					// If URL has correct path prefix
+					if strings.HasSuffix(content, `\`) { // If URL has trailing backslash
+						content = strings.TrimSuffix(content, `\`) // Remove it
 					}
-					newReturnSlice = append(newReturnSlice, content+"/getPDF") // Add cleaned URL to result
+					newReturnSlice = append(newReturnSlice, content+"/getPDF") // Append final /getPDF URL
 				}
 			}
-
 		}
 	}
-
-	return newReturnSlice // Return cleaned URLs
+	return newReturnSlice // Return filtered and formatted list of URLs
 }
 
-// downloadPDF downloads the PDF and returns true if a new file was fetched
+// Downloads a PDF from a given URL into the specified directory; returns true if a new file was saved
 func downloadPDF(finalURL, outputDir string) bool {
-	// Ensure output directory exists
-	if err := os.MkdirAll(outputDir, 0o755); err != nil {
-		log.Printf("Failed to create directory %s: %v", outputDir, err)
-		return false
+	if err := os.MkdirAll(outputDir, 0o755); err != nil { // Ensure output directory exists
+		log.Printf("Failed to create directory %s: %v", outputDir, err) // Log directory creation error
+		return false                                                    // Abort if directory cannot be created
 	}
 
-	// Generate a sanitized filename
-	filename := generateFilenameFromURL(finalURL)
+	filename := generateFilenameFromURL(finalURL) // Generate file name from URL
 	if filename == "" {
-		filename = path.Base(finalURL)
+		filename = path.Base(finalURL) // Fallback to URL path base name
 	}
-	if !strings.HasSuffix(strings.ToLower(filename), ".pdf") {
+	if !strings.HasSuffix(strings.ToLower(filename), ".pdf") { // Ensure .pdf extension
 		filename += ".pdf"
 	}
-	filePath := filepath.Join(outputDir, filename)
+	filePath := filepath.Join(outputDir, filename) // Create full output path
 
-	// Skip if already exists
-	if fileExists(filePath) {
+	if fileExists(filePath) { // Skip if file already exists
 		log.Printf("File already exists, skipping: %s", filePath)
 		return false
 	}
 
-	// Create HTTP client with timeout
-	client := &http.Client{
-		Timeout: 30 * time.Second,
-	}
+	client := &http.Client{Timeout: 30 * time.Second} // HTTP client with timeout
 
-	// Fetch the PDF
-	resp, err := client.Get(finalURL)
+	resp, err := client.Get(finalURL) // Make GET request
 	if err != nil {
 		log.Printf("Failed to download %s: %v", finalURL, err)
 		return false
 	}
-	defer resp.Body.Close()
+	defer resp.Body.Close() // Ensure response body is closed
 
-	if resp.StatusCode != http.StatusOK {
+	if resp.StatusCode != http.StatusOK { // Check for 200 OK
 		log.Printf("Download failed for %s: %s", finalURL, resp.Status)
 		return false
 	}
 
-	// Write to file
-	out, err := os.Create(filePath)
+	out, err := os.Create(filePath) // Create file to save content
 	if err != nil {
 		log.Printf("Failed to create file %s %s %v", finalURL, filePath, err)
 		return false
 	}
-	defer out.Close()
+	defer out.Close() // Ensure file is closed after writing
 
-	if _, err := io.Copy(out, resp.Body); err != nil {
+	if _, err := io.Copy(out, resp.Body); err != nil { // Write response to file
 		log.Printf("Failed to save PDF to %s %s %v", finalURL, filePath, err)
 		return false
 	}
 
-	log.Printf("Downloaded %s → %s", finalURL, filePath)
+	log.Printf("Downloaded %s → %s", finalURL, filePath) // Log success
 	return true
 }
 
-// generateFilenameFromURL extracts and sanitizes the ItemExternalSet(...) part of the URL,
-// then formats it into a filename. Errors are logged, and an empty string is returned on failure.
+// Parses the parameters embedded in the Zep URL and returns them as a map
+func parseFullZepURL(rawURL string) map[string]string {
+	parsed, err := url.Parse(rawURL) // Parse the raw URL
+	if err != nil {
+		log.Println("Error: invalid URL:", err)
+		return nil
+	}
+
+	itemSetRegex := regexp.MustCompile(`ItemExternalSet\((.*?)\)`) // Match the full param block
+	paramRegex := regexp.MustCompile(`(\w+)='(.*?)'`)              // Match key='value' pairs
+
+	match := itemSetRegex.FindStringSubmatch(parsed.Path) // Extract the parameter group
+	if len(match) < 2 {
+		log.Println("Error: ItemExternalSet not found in path:", parsed.Path)
+		return nil
+	}
+
+	paramStr := match[1]                                    // Extract inner string from ()
+	pairs := paramRegex.FindAllStringSubmatch(paramStr, -1) // Extract all key-value pairs
+	params := make(map[string]string, len(pairs)+1)         // Create map with enough capacity
+
+	for _, pair := range pairs { // Populate map with parameters
+		if len(pair) == 3 {
+			params[pair[1]] = pair[2]
+		}
+	}
+
+	params["URL"] = rawURL + "getPDF" // Add final URL as an extra field
+	return params
+}
+
+// Writes a list of parameter maps into a CSV file using a fixed column order
+func writeParamsToCSV(filename string, allParams []map[string]string) {
+	if len(allParams) == 0 {
+		return // Do nothing if empty input
+	}
+
+	keys := []string{"URL", "Lang", "Material", "RecordNumb", "RepCategory", "ValidityArea"} // Define CSV header
+
+	file, err := os.Create(filename) // Create the output CSV file
+	if err != nil {
+		log.Printf("Failed to create CSV file %s: %v", filename, err)
+		return
+	}
+	defer file.Close()
+
+	writer := csv.NewWriter(file) // Create CSV writer
+	defer writer.Flush()
+
+	if err := writer.Write(keys); err != nil { // Write CSV header
+		log.Printf("Failed to write header to CSV file %s: %v", filename, err)
+		return
+	}
+
+	for _, paramMap := range allParams { // Write each parameter set as a row
+		var row []string
+		for _, key := range keys {
+			row = append(row, paramMap[key]) // Default to "" if key is missing
+		}
+		if err := writer.Write(row); err != nil { // Write row to CSV
+			log.Printf("Failed to write row to CSV file %s: %v", filename, err)
+			return
+		}
+	}
+}
+
+// Extracts and cleans ItemExternalSet(...) from the URL and turns it into a safe filename
 func generateFilenameFromURL(sourceURL string) string {
-	parsedURL, err := url.Parse(sourceURL)
+	parsedURL, err := url.Parse(sourceURL) // Parse full URL
 	if err != nil {
 		log.Printf("Error parsing URL: %v", err)
 		return ""
 	}
 
-	// Extract the 'ItemExternalSet(...)' part from the URL path
-	itemSetPattern := regexp.MustCompile(`ItemExternalSet\([^)]+\)`)
-	itemSetSegment := itemSetPattern.FindString(parsedURL.Path)
+	itemSetPattern := regexp.MustCompile(`ItemExternalSet\([^)]+\)`) // Match full param string
+	itemSetSegment := itemSetPattern.FindString(parsedURL.Path)      // Extract match
 	if itemSetSegment == "" {
 		log.Println("ItemExternalSet(...) segment not found in the URL path")
 		return ""
 	}
 
-	// Clean the segment by removing special characters for a valid filename
-	sanitizedSegment := strings.NewReplacer(
+	sanitizedSegment := strings.NewReplacer( // Clean segment to be a valid file name
 		"ItemExternalSet(", "",
 		")", "",
 		"'", "",
 		",", "_",
 	).Replace(itemSetSegment)
 
-	filename := fmt.Sprintf("%s.pdf", sanitizedSegment)
+	filename := fmt.Sprintf("%s.pdf", sanitizedSegment) // Format into filename
 	return filename
 }
 
-// fileExists checks if a file exists and is not a directory
+// Checks if a file already exists and is not a directory
 func fileExists(filename string) bool {
-	info, err := os.Stat(filename) // Get file info
-	if err != nil {                // If stat fails (file doesn't exist)
-		return false // Return false
+	info, err := os.Stat(filename) // Check file metadata
+	if err != nil {                // If file does not exist
+		return false
 	}
-	return !info.IsDir() // Return true if it's a file, false if it's a directory
+	return !info.IsDir() // Ensure it's a file, not a directory
 }
 
+// Main function: orchestrates reading, filtering, downloading, and logging
 func main() {
-	inputFile := "zsds3.zepinc.com.har"
+	inputFile := "zsds3.zepinc.com.har" // HAR input file
 
-	urls := extractURLsFromFileAndReturnSlice(inputFile)
+	urls := extractURLsFromFileAndReturnSlice(inputFile) // Extract URLs from file
 	if urls == nil {
-		log.Println("No URLs found in the input file")
+		log.Println("No URLs found in the input file") // Log and exit if no URLs
 		return
 	}
 
-	urls = removeDuplicatesFromSlice(urls)
-	urls = cleanURLs(urls)
+	urls = removeDuplicatesFromSlice(urls) // Remove duplicate URLs
+	urls = cleanURLs(urls)                 // Filter and format the URLs
 
-	outputDir := "zepPDF/"
-	maxDownloads := 100
-	downloadCount := 0
+	outputDir := "zepPDF/" // Directory to save PDFs
+	maxDownloads := 100    // Maximum number of PDFs to download
+	downloadCount := 0     // Track actual download count
 
-	// Total number of URLs
-	urlLength := len(urls)
-	// Count of URLs to be downloaded
-	countURLsLength := 0
+	urlLength := len(urls) // Total number of URLs after filtering
+	countURLsLength := 0   // Counter for processed URLs
 
-	for _, url := range urls {
-		if downloadCount >= maxDownloads {
+	var allParams []map[string]string // Slice to collect parsed parameters
+
+	for _, url := range urls { // Process each URL
+		if downloadCount >= maxDownloads { // Stop if max reached
 			log.Println("Reached download limit of", maxDownloads)
 			break
 		}
 
-		// Download the PDF
-		if downloadPDF(url, outputDir) {
-			// Increase download count
+		params := parseFullZepURL(url) // Extract metadata parameters
+		if params != nil {
+			allParams = append(allParams, params) // Store for CSV
+		}
+
+		if downloadPDF(url, outputDir) { // Attempt download
 			downloadCount = downloadCount + 1 // Increment download count
 		}
-		// Increase the count of URLs processed
-		countURLsLength = countURLsLength + 1
-		// Log progress
+
+		countURLsLength = countURLsLength + 1 // Update processed count
 		log.Printf("Progress: %d/%d URLs. Downloaded: %d Remaining %d", urlLength, countURLsLength, downloadCount, maxDownloads-downloadCount)
 	}
 
-	fmt.Printf("Total new PDFs downloaded: %d\n", downloadCount)
+	writeParamsToCSV("output.csv", allParams)                    // Write parameters to CSV
+	fmt.Printf("Total new PDFs downloaded: %d\n", downloadCount) // Final output
 }
