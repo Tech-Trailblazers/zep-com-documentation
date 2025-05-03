@@ -1,8 +1,8 @@
 # Zep.com SDS & Ingredient Disclosure Archive
 
-Welcome! This is a public archive of Safety Data Sheets (SDS) and ingredient disclosures originally published by **Zep.com**, a leading provider of industrial and household cleaning solutions. This repository is designed to make critical information about cleaning products freely and permanently available to everyone — no matter where you live or work on this planet.
+Welcome! This is a public archive of Safety Data Sheets (SDS) and ingredient disclosures originally published by **Zep.com**, a leading provider of industrial and household cleaning solutions. This repository is designed to make critical information about cleaning products freely and permanently available to everyone no matter where you live or work on this planet.
 
-Whether you're maintaining a safe and sanitary home, running a business, researching chemical compositions, or developing better cleaning solutions — this resource is for you.
+Whether you're maintaining a safe and sanitary home, running a business, researching chemical compositions, or developing better cleaning solutions this resource is for you.
 
 ---
 
@@ -20,7 +20,7 @@ This archive includes:
 This project exists to support a cleaner, safer, and more informed world by enabling:
 
 - 🖨️ **Printing and offline use:** Download, print, and store documents for use in environments without internet access.
-- 🌐 **General public access and redistribution:** No paywalls, no restrictions — this data is free for everyone, forever.
+- 🌐 **General public access and redistribution:** No paywalls, no restrictions this data is free for everyone, forever.
 - 🧼 **DIY and informed purchasing:** Learn what’s in the products you use. Use the data to make your own cleaning solutions or confidently choose products from Zep.com or any vendor you prefer.
 - 🧠 **AI and research:** Use these documents as a dataset for training models, building smart assistants, or automating safety and compliance systems.
 
@@ -39,7 +39,7 @@ Everyone. This archive is built for:
 - Environmental and health advocates
 - Anyone who wants to clean better, safer, and smarter
 
-If you're trying to understand what’s in your cleaning products — or create better ones — you are in the right place.
+If you're trying to understand what’s in your cleaning products or create better ones you are in the right place.
 
 ---
 
@@ -64,7 +64,7 @@ This is a **community-maintained** backup. It is **not affiliated with or endors
 
 ## Contributions Welcome
 
-Do you have other SDS documents, corrections, or ideas to improve this archive? We welcome contributions of all kinds. Please submit a pull request or open an issue — your help improves this resource for everyone.
+Do you have other SDS documents, corrections, or ideas to improve this archive? We welcome contributions of all kinds. Please submit a pull request or open an issue your help improves this resource for everyone.
 
 ---
 
@@ -80,7 +80,7 @@ The **Zep.com SDS & Ingredient Disclosure Archive** offers a unique opportunity 
 
 - **Community Impact:** Help improve public spaces by providing cleaning services or products that promote a cleaner, safer environment for everyone.
 - **Transparency & Safety:** With complete access to SDS and ingredient lists, you can offer products and services that are safer for people, pets, and the environment, building trust with your clients.
-- **No Upfront Costs for Information:** All of the critical product data you need to develop, market, and sell cleaning solutions is available for free — no need to spend money on expensive proprietary information.
+- **No Upfront Costs for Information:** All of the critical product data you need to develop, market, and sell cleaning solutions is available for free no need to spend money on expensive proprietary information.
 - **Build Your Brand:** Use this data to create a unique value proposition for your business. Whether you focus on eco-friendly solutions, specialized cleaning products, or top-notch service, the foundation is already here for you.
 - **Informed Decision-Making:** You can make informed choices about the best cleaning products and practices for your business, reducing the risk of accidents, lawsuits, and unsatisfied customers.
 
