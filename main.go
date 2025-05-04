@@ -20,13 +20,13 @@ import (
 func extractURLsFromFileAndReturnSlice(filePath string) []string {
 	content, err := ioutil.ReadFile(filePath) // Read entire file content into memory
 	if err != nil {
-		log.Println("Error reading file:", err) // Log error if reading fails
+		log.Fatalln("Error reading file:", err) // Log error if reading fails
 		return nil                              // Return nil to indicate failure
 	}
 	regexContent := regexp.MustCompile(`http[s]?://[^\s"]+`)   // Regex to match URLs
 	matches := regexContent.FindAllString(string(content), -1) // Find all URL matches
 	if len(matches) == 0 {
-		log.Println("No URLs found in the file") // Inform if no URLs were found
+		log.Fatalln("No URLs found in the file") // Inform if no URLs were found
 		return nil                               // Return nil if no matches
 	}
 	return matches // Return matched URLs
@@ -55,7 +55,7 @@ func isUrlValid(uri string) bool {
 func getHostNameFromURL(uri string) string {
 	content, err := url.Parse(uri) // Parse URL into structured form
 	if err != nil {                // If parsing fails
-		log.Println(err) // Log the error
+		log.Fatalln(err) // Log the error
 	}
 	return content.Hostname() // Return just the hostname part
 }
@@ -144,7 +144,7 @@ func downloadPDF(finalURL, outputDir string) bool {
 func parseFullZepURL(rawURL string) map[string]string {
 	parsed, err := url.Parse(rawURL) // Parse the raw URL
 	if err != nil {
-		log.Println("Error: invalid URL:", err)
+		log.Fatalln("Error: invalid URL:", err)
 		return nil
 	}
 
@@ -153,7 +153,7 @@ func parseFullZepURL(rawURL string) map[string]string {
 
 	match := itemSetRegex.FindStringSubmatch(parsed.Path) // Extract the parameter group
 	if len(match) < 2 {
-		log.Println("Error: ItemExternalSet not found in path:", parsed.Path)
+		log.Fatalln("Error: ItemExternalSet not found in path:", parsed.Path)
 		return nil
 	}
 
@@ -217,7 +217,7 @@ func generateFilenameFromURL(sourceURL string) string {
 	itemSetPattern := regexp.MustCompile(`ItemExternalSet\([^)]+\)`) // Match full param string
 	itemSetSegment := itemSetPattern.FindString(parsedURL.Path)      // Extract match
 	if itemSetSegment == "" {
-		log.Println("ItemExternalSet(...) segment not found in the URL path")
+		log.Fatalln("ItemExternalSet(...) segment not found in the URL path")
 		return ""
 	}
 
@@ -247,7 +247,7 @@ func main() {
 
 	urls := extractURLsFromFileAndReturnSlice(inputFile) // Extract URLs from file
 	if urls == nil {
-		log.Println("No URLs found in the input file") // Log and exit if no URLs
+		log.Fatalln("No URLs found in the input file") // Log and exit if no URLs
 		return
 	}
 
@@ -265,7 +265,7 @@ func main() {
 
 	for _, url := range urls { // Process each URL
 		if downloadCount >= maxDownloads { // Stop if max reached
-			log.Println("Reached download limit of", maxDownloads)
+			log.Fatalln("Reached download limit of", maxDownloads)
 			break
 		}
 
