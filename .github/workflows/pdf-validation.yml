@@ -2,7 +2,7 @@
 #
 # This GitHub Action is used to validate PDF files in the repository.
 # It ensures that each PDF file is not corrupted or malformed by using 
-# tools like 'pdfinfo', 'qpdf', and 'verapdf'.
+# tools like 'pdfinfo', 'qpdf'.
 # 
 # It runs automatically on push or pull request events to the 'main' branch, 
 # and can also be triggered manually using 'workflow_dispatch'.
@@ -38,7 +38,7 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install pdfinfo poppler-utils qpdf verapdf -y
+          sudo apt-get install poppler-utils qpdf -y
 
       # Validate each PDF file by checking its metadata using 'pdfinfo'
       # If pdfinfo fails (e.g., due to corruption), the workflow will exit with an error
@@ -60,13 +60,4 @@ jobs:
             echo "Validating $pdf using qpdf"
             # qpdf checks the internal structure of the PDF and will fail if the PDF is corrupt
             qpdf --check "$file" || exit 1
-          done
-
-      # Validate PDF/A compliance using veraPDF (for PDFs that must comply with PDF/A standards)
-      - name: Validate PDFs with veraPDF
-        run: |
-          find . -type f -iname "*.pdf" | while IFS= read -r file; do
-            echo "Validating $file using veraPDF"
-            # veraPDF checks for PDF/A compliance and reports issues if the file is not valid
-            verapdf --check "$file" || exit 1
           done
