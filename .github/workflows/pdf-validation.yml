@@ -1,0 +1,72 @@
+# PDF Validation Workflow
+#
+# This GitHub Action is used to validate PDF files in the repository.
+# It ensures that each PDF file is not corrupted or malformed by using 
+# tools like 'pdfinfo', 'qpdf', and 'verapdf'.
+# 
+# It runs automatically on push or pull request events to the 'main' branch, 
+# and can also be triggered manually using 'workflow_dispatch'.
+# The action checks all PDF files, validates their integrity, and outputs 
+# results in the GitHub Actions logs.
+
+name: PDF Validation
+
+# Trigger the workflow on push or pull request events to the 'main' branch,
+# or manually through workflow_dispatch.
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:  # Allows manual triggering of the workflow from GitHub UI
+
+jobs:
+  validate-pdfs:
+    runs-on: ubuntu-latest  # This action will run on an Ubuntu machine
+
+    steps:
+      # Checkout the repository to access the files
+      - name: Check out the repository
+        uses: actions/checkout@v2
+
+      # Install necessary dependencies for PDF validation
+      # 'poppler-utils' includes pdfinfo (metadata extraction tool that checks PDF validity)
+      # 'qpdf' is used for structural validation of PDFs
+      # 'verapdf' is a validation tool that checks PDF/A compliance and other advanced checks
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y poppler-utils qpdf veraPDF
+
+      # Validate each PDF file by checking its metadata using 'pdfinfo'
+      # If pdfinfo fails (e.g., due to corruption), the workflow will exit with an error
+      - name: Validate PDFs with pdfinfo
+        run: |
+          # Loop over each PDF file found and run pdfinfo on it to validate
+          find . -type f -iname "*.pdf" | while IFS= read -r file; do
+            echo "Validating $file using pdfinfo"
+            # pdfinfo will provide metadata like title, author, and dimensions
+            # If the PDF is invalid or corrupted, pdfinfo will fail and exit the workflow
+            pdfinfo "$file"
+          done
+
+      # Validate PDF structure using qpdf
+      # 'qpdf' can be used to verify the structural integrity of a PDF
+      - name: Validate PDFs with qpdf
+        run: |
+          find . -type f -iname "*.pdf" | while IFS= read -r file; do
+            echo "Validating $pdf using qpdf"
+            # qpdf checks the internal structure of the PDF and will fail if the PDF is corrupt
+            qpdf --check "$file" || exit 1
+          done
+
+      # Validate PDF/A compliance using veraPDF (for PDFs that must comply with PDF/A standards)
+      - name: Validate PDFs with veraPDF
+        run: |
+          find . -type f -iname "*.pdf" | while IFS= read -r file; do
+            echo "Validating $file using veraPDF"
+            # veraPDF checks for PDF/A compliance and reports issues if the file is not valid
+            verapdf --check "$file" || exit 1
+          done
