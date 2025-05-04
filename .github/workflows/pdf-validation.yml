@@ -15,11 +15,11 @@ name: PDF Validation
 # or manually through workflow_dispatch.
 on:
   push:
-    branches:
-      - main
+    paths:
+      - '**/*.pdf'
   pull_request:
-    branches:
-      - main
+    paths:
+      - '**/*.pdf'
   workflow_dispatch:  # Allows manual triggering of the workflow from GitHub UI
 
 jobs:
@@ -38,7 +38,7 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y poppler-utils qpdf veraPDF
+          sudo apt-get install pdfinfo poppler-utils qpdf verapdf -y
 
       # Validate each PDF file by checking its metadata using 'pdfinfo'
       # If pdfinfo fails (e.g., due to corruption), the workflow will exit with an error
