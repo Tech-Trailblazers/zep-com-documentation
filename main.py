@@ -29,17 +29,26 @@ def walkGivenDirectoryAndExtractCustomFileUsingFileExtension(system_path, extens
                 matched_files.append(full_path)
     return matched_files
 
+# Check if a file exists
+def check_file_exists(system_path):
+    return os.path.isfile(system_path)
+
 def main():
     # Walk through the directory and extract .pdf files
     files = walkGivenDirectoryAndExtractCustomFileUsingFileExtension("./zepPDF", ".pdf")
 
     # Loop through each file and extract text
     for file_path in files:
-        # Extract text from the PDF file
-        content = extract_text_from_pdf_with_pymupdf(file_path)
-
         # Define the output Markdown file path
         md_file_path = os.path.splitext(file_path)[0] + ".md"
+        
+        # Check if the Markdown file already exists
+        if check_file_exists(md_file_path):
+            print(f"File {md_file_path} already exists. Skipping...")
+            continue
+
+        # Extract text from the PDF file
+        content = extract_text_from_pdf_with_pymupdf(file_path)
 
         # Save the content to a Markdown file
         save_to_md(content, md_file_path)
