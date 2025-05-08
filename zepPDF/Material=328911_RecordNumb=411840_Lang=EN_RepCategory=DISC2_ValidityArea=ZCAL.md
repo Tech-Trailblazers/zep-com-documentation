@@ -1,0 +1,18 @@
+ 
+ 
+ 
+California – Product Right-To-Know Ingredient Disclosure 
+Material Number: 000000000000328911 
+Product Name: Zep 2000 Lv Hd Grease_328911_20N13_12Ct 
+Ingredient disclosure for this product is not required per SB 258 Regulation. 
+ 
+For additional information or question, please contact us at: 
+Zep, Inc. 
+C/O Technical Services 
+3330 Cumberland Blvd. SE, Ste 700 
+Atlanta, GA 30339 
+Email: asktech@zep.com 
+ 
+ 
+ 
+ 

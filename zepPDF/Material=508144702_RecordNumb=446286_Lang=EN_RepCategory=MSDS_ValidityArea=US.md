@@ -1,0 +1,457 @@
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+To Our Customers: 
+ 
+The attached Safety Data Sheet (SDS) was prepared by the vendor of the product you purchased 
+through one of our divisions. We used the manufacturer’s electronic document directly or 
+scanned a paper copy and generated a file for our automated SDS delivery system. 
+ 
+All statements, technical information, and recommendations contained therein are solely that of 
+the manufacturer of the product. We at Zep Inc. did not verify the accuracy and completeness of 
+the statements and do not warrantee or guarantee the information. We provide vendor SDSs in 
+accordance with the requirements of the OSHA Hazard Communication Standard in order to 
+assist our customers in their compliance efforts. We made every effort to deliver all of the 
+information prepared by the manufacturer. We cannot anticipate all conditions under which this 
+information will be used. If you have any questions about the statements on the SDS, please 
+contact the company shown on the document. 
+ 
+Zep Inc. assumes no liability or responsibility for loss or damage resulting from the improper use 
+or handling of this product, from incompatible product combinations, or from the failure to 
+follow instructions, warnings, and advisories in the manufacturer’s product label and Safety Data 
+Sheet. 
+ 
+Sincerely, 
+ 
+Compliance Services 
+Zep Inc. 
+SAFETY DATA SHEET
+Issue Date 13-Mar-2015
+Revision Date 13-Mar-2015
+Version 1
+1. IDENTIFICATION OF THE SUBSTANCE/PREPARATION AND OF THE COMPANY/UNDERTAKING
+Product identifier 
+Product Name
+Klübersynth RA 44-702
+Other means of identification 
+Product code:
+012264
+Synonyms
+None
+Recommended use of the chemical and restrictions on use 
+Recommended Use
+Lubricant.
+Uses advised against
+Consumer use
+Details of the supplier of the safety data sheet 
+Emergency telephone number 
+Emergency Telephone
+CHEMTREC: 1-800-424-9300; INTERNATIONAL: (703) 527-3887
+2. HAZARDS IDENTIFICATION
+Classification
+OSHA Regulatory Status
+This chemical is considered hazardous by the 2012 OSHA Hazard Communication Standard (29 CFR 1910.1200)
+Specific target organ toxicity (repeated exposure)
+Category 2
+Label elements 
+EMERGENCY OVERVIEW
+Signal word
+Warning
+Hazard statements
+May cause damage to organs through prolonged or repeated exposure
+Supplier Address
+Klüber Lubrication NA, LP
+32 Industrial Drive
+Londonderry, NH 03053
+Phone:  (603) 647-4104
+Fax: (603) 647-4106
+_____________________________________________________________________________________________
+Precautionary Statements - Prevention
+Do not breathe dust/fume/gas/mist/vapors/spray
+Appearance Paste
+Physical state Solid
+Odor Mild
+_____________________________________________________________________________________________
+Klübersynth RA 44-702
+Revision Date 13-Mar-2015
+3. COMPOSITION/INFORMATION ON INGREDIENTS
+This material is considered hazardous by the OSHA Hazard Communication Standard (29 CFR 1910.1200).
+Components
+CAS-No
+Weight %
+Trade Secret
+1,3,5-Triazine-2,4,6(2H,3H,5H)-trione, cpd.
+with 1,3,5-triazine,2,4,6-triamine (1:1)
+37640-57-6
+1 - 10%
+*
+4. FIRST AID MEASURES
+First aid measures
+Eye contact:
+Flush eye with water for 15 minutes. If symptoms persist, call a physician.
+Skin contact:
+Rinse with plenty of water. If skin irritation persists, call a physician.
+Inhalation:
+Move to fresh air in case of accidental inhalation of fumes from overheating or combustion.
+If symptoms persist, call a physician.
+Ingestion:
+Do not induce vomiting. Consult a physician.
+Most important symptoms and effects, both acute and delayed
+Symptoms
+No information available.
+Indication of any immediate medical attention and special treatment needed
+Notes to physician:
+Treat symptomatically.
+5. FIRE-FIGHTING MEASURES
+Suitable extinguishing media:
+Carbon dioxide (CO2). Dry chemical. Dry sand. Water spray mist or foam.
+Unsuitable extinguishing media
+Do not use a solid water stream as it may scatter and spread fire
+Specific hazards arising from the chemical
+Thermal decomposition can lead to release of irritating gases and vapors. Water may be used to cool closed containers.
+Hazardous combustion productsCarbon oxides. Nitrogen oxides (NOx).
+Explosion data 
+Sensitivity to Mechanical Impact None.
+Sensitivity to Static Discharge
+None.
+Special protective equipment for firefighters:
+In the event of fire and/or explosion do not breathe fumes. In the event of fire, wear self-contained breathing apparatus. Standard
+procedure for chemical fires.
+6. ACCIDENTAL RELEASE MEASURES
+Personal precautions, protective equipment and emergency procedures
+Precautionary Statements - Disposal
+Dispose of contents/container to an approved waste disposal plant
+Hazards not otherwise classified (HNOC)
+_____________________________________________________________________________________________
+Other information
+Unknown Acute Toxicity
+58.2167% of the mixture consists of ingredient(s) of unknown toxicity
+_____________________________________________________________________________________________
+Klübersynth RA 44-702
+Revision Date 13-Mar-2015
+Personal precautions:
+Contaminated surfaces will be extremely slippery. Avoid contact with skin, eyes and
+clothing. Wear personal protective equipment.
+Environmental precautions
+Environmental precautions:
+Do not allow material to contaminate ground water system. Prevent product from entering
+drains. Avoid subsoil penetration.
+Methods and material for containment and cleaning up
+Methods for containment
+Prevent further leakage or spillage if safe to do so.
+Methods for cleaning up:
+Scrape-up. Pick up and transfer to properly labelled containers. Clean contaminated
+surface thoroughly.
+7. HANDLING AND STORAGE
+Precautions for safe handling
+Handling
+Avoid contact with skin, eyes and clothing. Spilling onto the container`s outside will make
+container slippery. Do not eat, drink or smoke when using this product. Wash hands
+thoroughly after handling.
+Conditions for safe storage, including any incompatibilities
+Storage Conditions
+Keep container tightly closed in a dry and well-ventilated place. Keep cool. Keep in properly
+labelled containers. Keep away from direct sunlight
+8. EXPOSURE CONTROLS/PERSONAL PROTECTION
+Control parameters
+Exposure Guidelines
+Contains mineral oil, vegetable oil, and/or synthetic oil.  Under conditions which may
+generate mists, observe the OSHA PEL of 5 mg/m3, ACGIH STEL of 10 mg/m3.
+Appropriate engineering controls
+Engineering measures to reduce
+exposure:
+Ensure adequate ventilation, especially in confined areas.
+Individual protection measures, such as personal protective equipment
+Respiratory protection:
+No personal respiratory protective equipment normally required.
+Hand protection:
+Impervious gloves
+Eye protection:
+Safety glasses with side-shields
+Skin and body protection:
+Usual safety precautions while handling the product will provide adequate protection
+against this potential effect
+General Hygiene Considerations
+Avoid contact with skin, eyes and clothing
+9. PHYSICAL AND CHEMICAL PROPERTIES
+Information on basic physical and chemical properties
+Physical state Solid
+Appearance Paste
+Odor Mild
+Color Beige
+Odor thresholdNo information
+available
+Property
+Values
+5HPDUNV0HWKRG
+pH
+Not applicable
+Melting
+point/freezing
+point
+No information
+available
+Boiling point /
+boiling range
+No information
+available
+Flash point
+Not Applicable
+_____________________________________________________________________________________________
+ISO 2592
+Evaporation
+rate
+No information
+available
+_____________________________________________________________________________________________
+Klübersynth RA 44-702
+Revision Date 13-Mar-2015
+Explosive properties
+No information available
+Oxidizing properties
+No information available
+Other information
+Softening point
+No information available
+Molecular weight
+No information available
+VOC Content (%)
+No information available
+Density
+No information available
+Bulk density
+No information available
+10. STABILITY AND REACTIVITY
+Reactivity
+Chemical stability
+Stability
+Stable under normal conditions
+Possibility of Hazardous Reactions
+Possibility of Hazardous
+Reactions
+None under normal processing.
+Hazardous polymerization
+Hazardous polymerization does not occur.
+Conditions to avoid
+Conditions to avoid
+Heat, flames and sparks
+Hazardous Decomposition Products
+Hazardous Decomposition
+Products
+None under normal processing
+Incompatible materials
+Incompatible materials
+Strong oxidising agents
+11. TOXICOLOGICAL INFORMATION
+Information on likely routes of exposure
+Product Information
+Product does not present an acute toxicity hazard based on known or supplied information
+Eye contact
+Contact with eyes may cause irritation.
+Skin contact
+Prolonged contact may cause redness and irritation.
+Inhalation
+Vapors and/or aerosols which may be formed at elevated temperatures may be irritating to
+eyes and respiratory tract.
+Flammability
+(solid, gas)
+No information
+available
+Flammability
+Limit in Air
+Upper
+flammability
+limit:
+No information
+available
+Lower
+flammability
+limit:
+No information
+available
+Vapor
+pressure
+< 0.001 hPa, 20
+°C
+Vapor density No information
+available
+Specific
+Gravity
+0.87
+Water
+solubility
+Insoluble in
+water
+Solubility in
+other solvents
+No information
+available
+Partition
+coefficient
+No information
+available
+Autoignition
+temperature
+No information
+available
+Decomposition
+temperature
+No information
+available
+Kinematic
+viscosity
+No information
+available
+_____________________________________________________________________________________________
+Dynamic
+viscosity
+No information
+available
+Not applicable
+_____________________________________________________________________________________________
+Klübersynth RA 44-702
+Revision Date 13-Mar-2015
+Ingestion
+Ingestion may cause gastrointestinal irritation, nausea, vomiting and diarrhoea.
+Information on toxicological effects
+Delayed and immediate effects as well as chronic effects from short and long-term exposure
+Sensitization
+No sensitization responses were observed.
+Mutagenic effects:
+Did not show mutagenic or teratogenic effects in animal experiments.
+Carcinogenicity
+This product does not contain any carcinogens or potential carcinogens as listed by OSHA,
+IARC or NTP.
+Reproductive toxicity
+This product does not contain any known or suspected reproductive hazards.
+STOT - Single Exposure
+None under normal use conditions.
+STOT - Repeated Exposure
+Causes damage to organs through prolonged or repeated exposure.
+Aspiration hazard
+Not applicable.
+Numerical measures of toxicity  - Product Information
+Unknown Acute Toxicity
+58.2167% of the mixture consists of ingredient(s) of unknown toxicity
+The following values are calculated based on chapter 3.1 of the GHS document .
+ATEmix (oral)
+6209  mg/kg
+ATEmix (dermal)
+6209  mg/kg
+ATEmix (inhalation-dust/mist)
+5.4  mg/l
+12. ECOLOGICAL INFORMATION
+Ecotoxicity
+No known hazards to the aquatic environment.
+58.4694% of the mixture consists of components(s) of unknown hazards to the aquatic environment
+Persistence and degradability
+No information available.
+Bioaccumulation
+No information available.
+Mobility
+The product is insoluble and floats on water.
+13. DISPOSAL CONSIDERATIONS
+Waste treatment methods
+Disposal of wastes
+Disposal should be in accordance with applicable regional, national and local laws and
+regulations.
+Contaminated packaging
+Empty containers should be taken for local recycling, recovery or waste disposal.
+14. TRANSPORT INFORMATION
+DOT
+Not Regulated by any means of transportation
+_____________________________________________________________________________________________
+_____________________________________________________________________________________________
+Klübersynth RA 44-702
+Revision Date 13-Mar-2015
+15. REGULATORY INFORMATION
+International Inventories 
+TSCA:
+DSL:
+EINECS/ELINCS
+CHINA:
+KECL:
+PICCS:
+AICS:
+Listed in TSCA
+Not listed in DSL
+This product complies with EINECS/ELINCS
+This product complies with China IECSC.
+This product does not comply with Korea KECL.
+This product complies with Philippines PICCS.
+All the constituents of this material are listed on the Australian AICS
+Legend:
+TSCA - United States Toxic Substances Control Act Section 8(b) Inventory
+DSL/NDSL - Canadian Domestic Substances List/Non-Domestic Substances List
+EINECS/ELINCS - European Inventory of Existing Chemical Substances/European List of Notified Chemical Substances
+ENCS - Japan Existing and New Chemical Substances
+IECSC - China Inventory of Existing Chemical Substances
+KECL - Korean Existing and Evaluated Chemical Substances
+PICCS - Philippines Inventory of Chemicals and Chemical Substances
+AICS - Australian Inventory of Chemical Substances
+Federal Regulations 
+SARA 313
+Section 313 of Title III of the Superfund Amendments and Reauthorization Act of 1986 (SARA).  This product does not contain any
+chemicals which are subject to the reporting requirements of the Act and Title 40 of the Code of Federal Regulations, Part 372
+SARA 311/312 Hazard Categories 
+Acute Health Hazard
+No
+Chronic Health Hazard
+No
+Fire Hazard
+No
+Sudden release of pressure hazard
+No
+Reactive Hazard
+No
+CWA (Clean Water Act)
+This product does not contain any substances regulated as pollutants pursuant to the Clean Water Act (40 CFR 122.21 and 40
+CFR 122.42)
+CERCLA
+This material, as supplied, does not contain any substances regulated as hazardous substances under the Comprehensive
+Environmental Response Compensation and Liability Act (CERCLA) (40 CFR 302) or the Superfund Amendments and
+Reauthorization Act (SARA) (40 CFR 355).  There may be specific reporting requirements at the local, regional, or state level
+pertaining to releases of this material
+State Regulations (RTK) 
+California Proposition 65
+This product does not contain any Proposition 65 chemicals
+U.S. State Right-to-Know Regulations
+U.S. EPA Label Information
+EPA Pesticide Registration Number Not applicable
+16. OTHER INFORMATION
+_____________________________________________________________________________________________
+Nfpa:
+Health: 1
+Flammability: 1
+_____________________________________________________________________________________________
+Klübersynth RA 44-702
+Revision Date 13-Mar-2015
+Instability 0
+NFPA/HMIS * for Carc, Muta, Tera, Specific Organ *
+HMIS health rating:
+Health: 1
+Flammability: 1
+Physical hazards 0
+Personal protection B
+Issue Date
+13-Mar-2015
+Revision Date
+13-Mar-2015
+Revision Note
+Not applicable
+_____________________________________________________________________________________________
+Disclaimer
+The information provided in this Safety Data Sheet is correct to the best of our knowledge, information and belief at the
+date of its publication. The information given is designed only as a guidance for safe handling, use, processing, storage,
+transportation, disposal and release and is not to be considered a warranty or quality specification. The information
+relates only to the specific material designated and may not be valid for such material used in combination with any other
+materials or in any process, unless specified in the text.
+End of Safety Data Sheet
