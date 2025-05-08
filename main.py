@@ -33,6 +33,27 @@ def walkGivenDirectoryAndExtractCustomFileUsingFileExtension(system_path, extens
 def check_file_exists(system_path):
     return os.path.isfile(system_path)
 
+# Function to validate a single PDF file.
+def validate_pdf_file(file_path):
+    try:
+        # Try to open the PDF using PyMuPDF
+        doc = fitz.open(file_path)
+        
+        # Check if the PDF has at least one page
+        if doc.page_count == 0:
+            print(f"'{file_path}' is corrupt or invalid: No pages")
+            return False
+        
+        # If no error occurs and the document has pages, it's valid
+        return True
+    except RuntimeError as e:  # Catching RuntimeError for invalid PDFs
+        print(f"'{file_path}' is corrupt or invalid: {e}")
+        return False
+
+# Remove a file from the system.
+def remove_system_file(system_path):
+    os.remove(system_path)
+
 def main():
     # Walk through the directory and extract .pdf files
     files = walkGivenDirectoryAndExtractCustomFileUsingFileExtension("./zepPDF", ".pdf")
@@ -41,10 +62,21 @@ def main():
     for file_path in files:
         # Define the output Markdown file path
         md_file_path = os.path.splitext(file_path)[0] + ".md"
-        
+
+        # If it exists, than validate the PDF file
+        if not validate_pdf_file(file_path):
+            # Remove the .MD if it is invalid
+            remove_system_file(md_file_path)
+            # Remove the .PDF file
+            remove_system_file(file_path)
+
+            # If the PDF file is invalid, remove the existing Markdown file
+            print(f"File {file_path} is corrupt or invalid. Skipping...")
+            continue        
+
         # Check if the Markdown file already exists
         if check_file_exists(md_file_path):
-            print(f"File {md_file_path} already exists. Skipping...")
+            print(f"'{md_file_path}' already exists. Skipping...")
             continue
 
         # Extract text from the PDF file
