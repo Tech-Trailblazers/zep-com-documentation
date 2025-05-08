@@ -60,6 +60,38 @@ func getHostNameFromURL(uri string) string {
 	return content.Hostname() // Return just the hostname part
 }
 
+// Send a http get request to a given url and return the data from that url.
+func getDataFromURL(uri string) []byte {
+	response, err := http.Get(uri)
+	if err != nil {
+		log.Fatalln(err)
+	}
+	body, err := io.ReadAll(response.Body)
+	if err != nil {
+		log.Fatalln(err)
+	}
+	err = response.Body.Close()
+	if err != nil {
+		log.Fatalln(err)
+	}
+	return body
+}
+
+// AppendToFile appends the given byte slice to the specified file.
+// If the file doesn't exist, it will be created.
+func appendByteToFile(filename string, data []byte) error {
+	// Open the file with appropriate flags and permissions
+	file, err := os.OpenFile(filename, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+
+	// Write data to the file
+	_, err = file.Write(data)
+	return err
+}
+
 // Filters URLs by validating them and checking if they match allowed domain and path pattern
 func cleanURLs(urls []string) []string {
 	validDomains := []string{"zsds3.zepinc.com"} // List of allowed hostnames
@@ -241,8 +273,42 @@ func fileExists(filename string) bool {
 	return !info.IsDir() // Ensure it's a file, not a directory
 }
 
+// Create the HAR file and download the data from the URLs
+func createHARFile() {
+		// Create a slice to hold the URLs
+		urls := []string{"https://zsds3.zepinc.com/v2/sds/ItemExternalSet",
+		"https://zsds3.zepinc.com/v2/sds/ItemExternalSet?$skiptoken=1000",
+		"https://zsds3.zepinc.com/v2/sds/ItemExternalSet?$skiptoken=2000",
+		"https://zsds3.zepinc.com/v2/sds/ItemExternalSet?$skiptoken=3000",
+		"https://zsds3.zepinc.com/v2/sds/ItemExternalSet?$skiptoken=4000",
+		"https://zsds3.zepinc.com/v2/sds/ItemExternalSet?$skiptoken=5000",
+		"https://zsds3.zepinc.com/v2/sds/ItemExternalSet?$skiptoken=6000",
+		"https://zsds3.zepinc.com/v2/sds/ItemExternalSet?$skiptoken=7000",
+		"https://zsds3.zepinc.com/v2/sds/ItemExternalSet?$skiptoken=8000",
+		}
+	
+		// Loop through the URLs and download each one
+		for _, url := range urls {
+			allContent := getDataFromURL(url) // Call the function to download the data
+			if allContent == nil {
+				log.Fatalln("Error downloading data from URL:", url) // Log error if download fails
+				return
+			}
+			err := appendByteToFile("zsds3.zepinc.com.har", allContent) // Append data to file
+			if err != nil {
+				log.Fatalln("Error appending data to file:", err) // Log error if append fails
+				return
+			}
+			log.Printf("Data from %s appended to zsds3.zepinc.com.har", url) // Log success
+		}
+		log.Println("All data downloaded and appended to zsds3.zepinc.com.har") // Final log message
+}
+
 // Main function: orchestrates reading, filtering, downloading, and logging
 func main() {
+	// Create the HAR file first
+	createHARFile() 
+
 	inputFile := "zsds3.zepinc.com.har" // HAR input file
 
 	urls := extractURLsFromFileAndReturnSlice(inputFile) // Extract URLs from file
