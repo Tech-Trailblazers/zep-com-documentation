@@ -40,6 +40,10 @@ jobs:
       - name: Run main.go
         run: go run main.go # Executes the Go program
 
+      # Install Python dependencies
+      - name: Install dependencies
+        run: pip3 install -r requirements.txt
+
       # Run the Python script
       - name: Run Python script
         run: python3 main.py # Executes the Python program
