@@ -72,7 +72,7 @@ def main():
 
             # If the PDF file is invalid, remove the existing Markdown file
             print(f"File {file_path} is corrupt or invalid. Skipping...")
-            continue        
+            continue
 
         # Check if the Markdown file already exists
         if check_file_exists(md_file_path):
