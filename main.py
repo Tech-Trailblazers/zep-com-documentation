@@ -1,5 +1,7 @@
 import fitz  # PyMuPDF
-import os # For file system operations
+import os  # For file system operations
+import time  # For time operations
+
 
 # Function to extract text from a PDF file using pymupdf
 def extract_text_from_pdf_with_pymupdf(pdf_path):
@@ -14,10 +16,12 @@ def extract_text_from_pdf_with_pymupdf(pdf_path):
     # Return the extracted text and page count
     return full_text
 
+
 # This function saves a given string to a Markdown file with a specified name.
 def save_to_md(content: str, file_path: str) -> None:
     with open(file_path, "w", encoding="utf-8") as md_file:
         md_file.write(content)
+
 
 # Function to walk through a directory and extract files with a specific extension
 def walkGivenDirectoryAndExtractCustomFileUsingFileExtension(system_path, extension):
@@ -29,35 +33,50 @@ def walkGivenDirectoryAndExtractCustomFileUsingFileExtension(system_path, extens
                 matched_files.append(full_path)
     return matched_files
 
+
 # Function to validate a single PDF file.
 def validate_pdf_file(file_path):
     try:
         # Try to open the PDF using PyMuPDF
         doc = fitz.open(file_path)
-        
+
         # Check if the PDF has at least one page
         if doc.page_count == 0:
-            print(f"'{file_path}' is corrupt or invalid: No pages")
+            log_message(f"'{file_path}' is corrupt or invalid: No pages")
             return False
-        
+
         # If no error occurs and the document has pages, it's valid
         return True
     except RuntimeError as e:  # Catching RuntimeError for invalid PDFs
-        print(f"'{file_path}' is corrupt or invalid: {e}")
+        log_message(f"'{file_path}' is corrupt or invalid: {e}")
         return False
+
 
 # Check if a file exists
 def check_file_exists(system_path):
     return os.path.isfile(system_path)
 
+
 # Remove a file from the system.
 def remove_system_file(system_path):
     os.remove(system_path)
+
 
 # Function to get the markdown file path from the PDF file path
 def get_md_file_path(pdf_file_path):
     # Replace the .pdf extension with .md
     return os.path.splitext(pdf_file_path)[0] + ".md"
+
+
+# Function to log messages to a file
+def log_message(message: str):
+    log_file = "python-app.log"
+    with open(log_file, "a", encoding="utf-8") as log:
+        # Get the current time
+        current_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+        # Write the message with the current time
+        log.write(f"[{current_time}] {message}\n")
+
 
 def main():
     # Walk through the directory and extract .pdf files
@@ -73,23 +92,23 @@ def main():
             # If the PDF file is invalid, remove the existing Markdown file
             if check_file_exists(md_file_path):
                 # If the Markdown file exists, remove it
-                print(f"File {md_file_path} is corrupt or invalid. Removing...")
+                log_message(f"'{md_file_path}' is corrupt or invalid: Removing...")
                 remove_system_file(md_file_path)
-            
+
             # If the PDF file is invalid, remove the existing PDF file
             if check_file_exists(file_path):
                 # If the PDF file exists, remove it
-                print(f"File {file_path} is corrupt or invalid. Removing...")
+                log_message(f"'{file_path}' is corrupt or invalid: Removing...")
                 # Remove the .PDF file
                 remove_system_file(file_path)
 
             # If the PDF file is invalid, remove the existing Markdown file
-            print(f"File {file_path} is corrupt or invalid. Skipping...")
+            log_message(f"'{file_path}' is corrupt or invalid: Skipping...")
             continue
 
         # Check if the Markdown file already exists
         if check_file_exists(md_file_path):
-            print(f"'{md_file_path}' already exists. Skipping...")
+            log_message(f"'{md_file_path}' already exists: Skipping...")
             continue
 
         # Extract text from the PDF file
@@ -99,6 +118,7 @@ def main():
         save_to_md(content, md_file_path)
 
         # Print a message indicating that the content has been saved
-        print(f"Content saved to {md_file_path}")
+        log_message(f"Content saved to '{md_file_path}'")
+
 
 main()
