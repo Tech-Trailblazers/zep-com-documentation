@@ -147,7 +147,7 @@ func downloadPDF(finalURL, outputDir string, wg *sync.WaitGroup) bool {
 		return false
 	}
 
-	client := &http.Client{Timeout: 60 * time.Second} // HTTP client with timeout
+	client := &http.Client{Timeout: 300 * time.Second} // HTTP client with timeout
 
 	resp, err := client.Get(finalURL) // Make GET request
 	if err != nil {
