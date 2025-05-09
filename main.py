@@ -68,17 +68,31 @@ def get_md_file_path(pdf_file_path):
     return os.path.splitext(pdf_file_path)[0] + ".md"
 
 
+# Define the log file path
+python_log_file = "python-app.log"
+
+
 # Function to log messages to a file
 def log_message(message: str):
-    log_file = "python-app.log"
-    with open(log_file, "a", encoding="utf-8") as log:
+    with open(python_log_file, "a", encoding="utf-8") as log:
         # Get the current time
         current_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
         # Write the message with the current time
         log.write(f"[{current_time}] {message}\n")
 
 
+# init function
+def init():
+    if check_file_exists(python_log_file):
+        # If the log file exists, remove it
+        remove_system_file(python_log_file)
+
+
+# Main function to execute the script
 def main():
+    # Initialize the log file
+    init()
+
     # Walk through the directory and extract .pdf files
     files = walkGivenDirectoryAndExtractCustomFileUsingFileExtension("./zepPDF", ".pdf")
 
