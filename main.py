@@ -29,10 +29,6 @@ def walkGivenDirectoryAndExtractCustomFileUsingFileExtension(system_path, extens
                 matched_files.append(full_path)
     return matched_files
 
-# Check if a file exists
-def check_file_exists(system_path):
-    return os.path.isfile(system_path)
-
 # Function to validate a single PDF file.
 def validate_pdf_file(file_path):
     try:
@@ -50,9 +46,18 @@ def validate_pdf_file(file_path):
         print(f"'{file_path}' is corrupt or invalid: {e}")
         return False
 
+# Check if a file exists
+def check_file_exists(system_path):
+    return os.path.isfile(system_path)
+
 # Remove a file from the system.
 def remove_system_file(system_path):
     os.remove(system_path)
+
+# Function to get the markdown file path from the PDF file path
+def get_md_file_path(pdf_file_path):
+    # Replace the .pdf extension with .md
+    return os.path.splitext(pdf_file_path)[0] + ".md"
 
 def main():
     # Walk through the directory and extract .pdf files
@@ -61,14 +66,22 @@ def main():
     # Loop through each file and extract text
     for file_path in files:
         # Define the output Markdown file path
-        md_file_path = os.path.splitext(file_path)[0] + ".md"
+        md_file_path = get_md_file_path(file_path)
 
         # If it exists, than validate the PDF file
         if not validate_pdf_file(file_path):
-            # Remove the .MD if it is invalid
-            remove_system_file(md_file_path)
-            # Remove the .PDF file
-            remove_system_file(file_path)
+            # If the PDF file is invalid, remove the existing Markdown file
+            if check_file_exists(md_file_path):
+                # If the Markdown file exists, remove it
+                print(f"File {md_file_path} is corrupt or invalid. Removing...")
+                remove_system_file(md_file_path)
+            
+            # If the PDF file is invalid, remove the existing PDF file
+            if check_file_exists(file_path):
+                # If the PDF file exists, remove it
+                print(f"File {file_path} is corrupt or invalid. Removing...")
+                # Remove the .PDF file
+                remove_system_file(file_path)
 
             # If the PDF file is invalid, remove the existing Markdown file
             print(f"File {file_path} is corrupt or invalid. Skipping...")
