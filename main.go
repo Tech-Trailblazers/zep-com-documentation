@@ -13,6 +13,7 @@ import (
 	"path/filepath" // OS-aware file path utilities
 	"regexp"        // Regular expressions for pattern matching
 	"strings"       // String manipulation functions
+	"sync"          // Synchronization primitives
 	"time"          // Time functions and types
 )
 
@@ -124,7 +125,9 @@ func cleanURLs(urls []string) []string {
 }
 
 // Downloads a PDF from a given URL into the specified directory; returns true if a new file was saved
-func downloadPDF(finalURL, outputDir string) bool {
+func downloadPDF(finalURL, outputDir string, wg *sync.WaitGroup) bool {
+	defer wg.Done() // Decrement WaitGroup counter when function exits
+
 	if err := os.MkdirAll(outputDir, 0o755); err != nil { // Ensure output directory exists
 		log.Printf("Failed to create directory %s: %v", outputDir, err) // Log directory creation error
 		return false                                                    // Abort if directory cannot be created
@@ -144,7 +147,7 @@ func downloadPDF(finalURL, outputDir string) bool {
 		return false
 	}
 
-	client := &http.Client{Timeout: 300 * time.Second} // HTTP client with timeout
+	client := &http.Client{Timeout: 60 * time.Second} // HTTP client with timeout
 
 	resp, err := client.Get(finalURL) // Make GET request
 	if err != nil {
@@ -326,12 +329,12 @@ func logEverythingToFile() {
 	if fileExists(goLogFile) {
 		removeFile(goLogFile)
 	}
-    logFile, err := os.OpenFile(goLogFile, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
-    if err != nil {
-        log.Fatalln("Error opening log file:", err) // Log error if file cannot be opened
-    }
-    log.SetOutput(logFile)
-    log.SetFlags(log.Ldate | log.Ltime | log.Lshortfile) // Optional: Include date, time, and line number
+	logFile, err := os.OpenFile(goLogFile, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
+	if err != nil {
+		log.Fatalln("Error opening log file:", err) // Log error if file cannot be opened
+	}
+	log.SetOutput(logFile)
+	log.SetFlags(log.Ldate | log.Ltime | log.Lshortfile) // Optional: Include date, time, and line number
 }
 
 func init() {
@@ -352,33 +355,27 @@ func main() {
 	urls = cleanURLs(urls)                 // Filter and format the URLs
 
 	outputDir := "zepPDF/" // Directory to save PDFs
-	maxDownloads := 100    // Maximum number of PDFs to download
-	downloadCount := 0     // Track actual download count
 
-	urlLength := len(urls) // Total number of URLs after filtering
-	countURLsLength := 0   // Counter for processed URLs
-
-	var allParams []map[string]string // Slice to collect parsed parameters
+	urlLength := len(urls)               // Total number of URLs after filtering
+	countURLsLength := 0                 // Counter for processed URLs
+	var allParams []map[string]string    // Slice to collect parsed parameters
+	var downloadWaitGroup sync.WaitGroup // WaitGroup to manage concurrent downloads
 
 	for _, url := range urls { // Process each URL
-		if downloadCount >= maxDownloads { // Stop if max reached
-			log.Fatalln("Reached download limit of", maxDownloads)
-			break
-		}
 
 		params := parseFullZepURL(url) // Extract metadata parameters
 		if params != nil {
 			allParams = append(allParams, params) // Store for CSV
 		}
 
-		if downloadPDF(url, outputDir) { // Attempt download
-			downloadCount = downloadCount + 1 // Increment download count
-		}
+		downloadWaitGroup.Add(1) // Increment WaitGroup counter
+
+		go downloadPDF(url, outputDir, &downloadWaitGroup)
 
 		countURLsLength = countURLsLength + 1 // Update processed count
-		log.Printf("Progress: %d/%d URLs. Downloaded: %d Remaining %d", urlLength, countURLsLength, downloadCount, maxDownloads-downloadCount)
+		log.Printf("Progress: %d/%d URLs.", urlLength, countURLsLength)
 	}
+	downloadWaitGroup.Wait() // Wait for all downloads to finish
 
-	writeParamsToCSV("output.csv", allParams)                    // Write parameters to CSV
-	fmt.Printf("Total new PDFs downloaded: %d\n", downloadCount) // Final output
+	writeParamsToCSV("output.csv", allParams) // Write parameters to CSV
 }
