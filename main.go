@@ -4,7 +4,6 @@ import (
 	"encoding/csv"  // Package to read/write CSV files
 	"fmt"           // Package for formatted I/O
 	"io"            // Core I/O primitives
-	"io/ioutil"     // Deprecated: used for reading whole files (still functional)
 	"log"           // Logging utilities
 	"net/http"      // HTTP client and server implementations
 	"net/url"       // URL parsing and formatting
@@ -21,7 +20,7 @@ var zepHarFile = "./zsds3.zepinc.com.har"
 
 // Reads a file, extracts all URLs using regex, and returns them as a slice of strings
 func extractURLsFromFileAndReturnSlice(filePath string) []string {
-	content, err := ioutil.ReadFile(filePath) // Read entire file content into memory
+	content, err := os.ReadFile(filePath) // Read entire file content into memory
 	if err != nil {
 		log.Fatalln("Error reading file:", err) // Log error if reading fails
 		return nil                              // Return nil to indicate failure
