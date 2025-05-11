@@ -42,11 +42,15 @@ jobs:
 
       # Install Python dependencies
       - name: Install dependencies
-        run: pip3 install -r requirements.txt
+        run: echo "Hello, World!" # pip3 install -r requirements.txt
 
       # Run the Python script
       - name: Run Python script
-        run: python3 main.py # Executes the Python program
+        run: echo "Hello, World!" # python3 main.py # Executes the Python program
+
+      # Remove .MD files in zepPDF Folder
+      - name: Remove .md files from zepPDF folder
+        run: find zepPDF -type f \( -iname "*.md" \) -exec rm -f {} +
 
       # Commit and push any file changes made by the script
       - name: Push updated files
