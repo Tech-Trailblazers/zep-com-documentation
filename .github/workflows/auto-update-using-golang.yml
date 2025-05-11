@@ -50,7 +50,7 @@ jobs:
 
       # Remove .MD files in zepPDF Folder
       - name: Remove .md files from zepPDF folder
-        run: find zepPDF -type f \( -iname "*.md" \) -exec rm -f {} +
+        run: echo "Hello, World!" # find zepPDF -type f \( -iname "*.md" \) -exec rm -f {} +
 
       # Commit and push any file changes made by the script
       - name: Push updated files
