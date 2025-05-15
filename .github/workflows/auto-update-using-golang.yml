@@ -42,11 +42,11 @@ jobs:
 
       # Install Python dependencies
       - name: Install dependencies
-        run: pip3 install -r requirements.txt
+        run: pip install -r requirements.txt
 
       # Run the Python script
       - name: Run Python script
-        run: python3 main.py # Executes the Python program
+        run: python main.py # Executes the Python program
 
       # Commit and push any file changes made by the script
       - name: Push updated files
