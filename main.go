@@ -320,26 +320,6 @@ func createHARFile() {
 	log.Printf("All data downloaded and appended to %s", zepHarFile) // Final log message
 }
 
-// Log everything to a file
-func logEverythingToFile() {
-	// The variable to hold the log file
-	var goLogFile = "go-app.log"
-	// Remve the log file if it exists
-	if fileExists(goLogFile) {
-		removeFile(goLogFile)
-	}
-	logFile, err := os.OpenFile(goLogFile, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
-	if err != nil {
-		log.Fatalln("Error opening log file:", err) // Log error if file cannot be opened
-	}
-	log.SetOutput(logFile)
-	log.SetFlags(log.Ldate | log.Ltime | log.Lshortfile) // Optional: Include date, time, and line number
-}
-
-func init() {
-	logEverythingToFile() // Initialize logging to file
-}
-
 // Main function: orchestrates reading, filtering, downloading, and logging
 func main() {
 	// Create the HAR file first
