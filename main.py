@@ -71,6 +71,7 @@ def main():
 
         # Check if the .PDF file is valid
         if validate_pdf_file(pdf_file) == False:  # If PDF is invalid
+            print(f"Invalid PDF detected: {pdf_file}. Deleting file.")
             # Remove the invalid .pdf file.
             remove_system_file(pdf_file)  # Delete the corrupt PDF
 
@@ -78,12 +79,9 @@ def main():
         if check_upper_case_letter(
             get_filename_and_extension(pdf_file)
         ):  # If the filename contains uppercase
-            # Print the location to the file.
-            print(pdf_file)  # Output the PDF path to stdout
-            # Print whether it matches the specs (uppercase presence)
             print(
-                check_upper_case_letter(pdf_file)
-            )  # Output True/False for uppercase check
+                f"Uppercase letter found in filename: {pdf_file}"
+            )  # Informative message
             # Break so it ends out of the loop.
             break  # Exit the loop after first uppercase match
 
