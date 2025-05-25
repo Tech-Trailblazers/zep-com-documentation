@@ -115,7 +115,10 @@ func cleanURLs(urls []string) []string {
 					if strings.HasSuffix(content, `\`) { // If URL has trailing backslash
 						content = strings.TrimSuffix(content, `\`) // Remove it
 					}
-					newReturnSlice = append(newReturnSlice, content+"/getPDF") // Append final /getPDF URL
+					// Check if the URL ends with a /getPDF and if not add it
+					if !strings.HasSuffix(content, "/getPDF") {
+						newReturnSlice = append(newReturnSlice, content+"/getPDF") // Append final /getPDF URL
+					}
 				}
 			}
 		}
@@ -203,7 +206,7 @@ func parseFullZepURL(rawURL string) map[string]string {
 		}
 	}
 
-	params["URL"] = rawURL + "getPDF" // Add final URL as an extra field
+	params["URL"] = rawURL // Add the original URL to the map
 	return params
 }
 
