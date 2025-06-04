@@ -268,7 +268,7 @@ func generateFilenameFromURL(sourceURL string) string {
 	).Replace(itemSetSegment)
 
 	filename := fmt.Sprintf("%s.pdf", sanitizedSegment) // Format into filename
-	return filename
+	return strings.ToLower(filename)
 }
 
 // Checks if a file already exists and is not a directory
