@@ -336,7 +336,7 @@ func main() {
 	urls = removeDuplicatesFromSlice(urls) // Remove duplicate URLs
 	urls = cleanURLs(urls)                 // Filter and format the URLs
 
-	outputDir := "zepPDF/" // Directory to save PDFs
+	outputDir := "PDFs/" // Directory to save PDFs
 
 	urlLength := len(urls)               // Total number of URLs after filtering
 	countURLsLength := 0                 // Counter for processed URLs
