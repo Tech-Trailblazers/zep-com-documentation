@@ -84,6 +84,16 @@ def main():
             print(
                 f"Uppercase letter found in filename: {pdf_file}"
             )  # Informative message
+            # Convert the file path to a lowercase version
+            dir_path = os.path.dirname(pdf_file)
+            # Get the file name
+            file_name = os.path.basename(pdf_file)
+            # Put the new file name in a lowercase file
+            new_file_name = file_name.lower()
+            # Set the new file path
+            new_file_path = os.path.join(dir_path, new_file_name)
+            # Change the file name.
+            os.rename(pdf_file, new_file_path)
 
 
 # Run the main function
