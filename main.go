@@ -22,13 +22,13 @@ var zepHarFile = "./zsds3.zepinc.com.har"
 func extractURLsFromFileAndReturnSlice(filePath string) []string {
 	content, err := os.ReadFile(filePath) // Read entire file content into memory
 	if err != nil {
-		log.Fatalln("Error reading file:", err) // Log error if reading fails
+		log.Println("Error reading file:", err) // Log error if reading fails
 		return nil                              // Return nil to indicate failure
 	}
 	regexContent := regexp.MustCompile(`http[s]?://[^\s"]+`)   // Regex to match URLs
 	matches := regexContent.FindAllString(string(content), -1) // Find all URL matches
 	if len(matches) == 0 {
-		log.Fatalln("No URLs found in the file") // Inform if no URLs were found
+		log.Println("No URLs found in the file") // Inform if no URLs were found
 		return nil                               // Return nil if no matches
 	}
 	return matches // Return matched URLs
@@ -57,7 +57,7 @@ func isUrlValid(uri string) bool {
 func getHostNameFromURL(uri string) string {
 	content, err := url.Parse(uri) // Parse URL into structured form
 	if err != nil {                // If parsing fails
-		log.Fatalln(err) // Log the error
+		log.Println(err) // Log the error
 	}
 	return content.Hostname() // Return just the hostname part
 }
@@ -66,15 +66,15 @@ func getHostNameFromURL(uri string) string {
 func getDataFromURL(uri string) []byte {
 	response, err := http.Get(uri)
 	if err != nil {
-		log.Fatalln(err)
+		log.Println(err)
 	}
 	body, err := io.ReadAll(response.Body)
 	if err != nil {
-		log.Fatalln(err)
+		log.Println(err)
 	}
 	err = response.Body.Close()
 	if err != nil {
-		log.Fatalln(err)
+		log.Println(err)
 	}
 	return body
 }
@@ -183,7 +183,7 @@ func downloadPDF(finalURL, outputDir string, wg *sync.WaitGroup) bool {
 func parseFullZepURL(rawURL string) map[string]string {
 	parsed, err := url.Parse(rawURL) // Parse the raw URL
 	if err != nil {
-		log.Fatalln("Error: invalid URL:", err)
+		log.Println("Error: invalid URL:", err)
 		return nil
 	}
 
@@ -192,7 +192,7 @@ func parseFullZepURL(rawURL string) map[string]string {
 
 	match := itemSetRegex.FindStringSubmatch(parsed.Path) // Extract the parameter group
 	if len(match) < 2 {
-		log.Fatalln("Error: ItemExternalSet not found in path:", parsed.Path)
+		log.Println("Error: ItemExternalSet not found in path:", parsed.Path)
 		return nil
 	}
 
@@ -256,7 +256,7 @@ func generateFilenameFromURL(sourceURL string) string {
 	itemSetPattern := regexp.MustCompile(`ItemExternalSet\([^)]+\)`) // Match full param string
 	itemSetSegment := itemSetPattern.FindString(parsedURL.Path)      // Extract match
 	if itemSetSegment == "" {
-		log.Fatalln("ItemExternalSet(...) segment not found in the URL path")
+		log.Println("ItemExternalSet(...) segment not found in the URL path")
 		return ""
 	}
 
@@ -284,7 +284,7 @@ func fileExists(filename string) bool {
 func removeFile(path string) {
 	err := os.Remove(path)
 	if err != nil {
-		log.Fatalln(err)
+		log.Println(err)
 	}
 }
 
@@ -310,12 +310,12 @@ func createHARFile() {
 	for _, url := range urls {
 		allContent := getDataFromURL(url) // Call the function to download the data
 		if allContent == nil {
-			log.Fatalln("Error downloading data from URL:", url) // Log error if download fails
+			log.Println("Error downloading data from URL:", url) // Log error if download fails
 			return
 		}
 		err := appendByteToFile(zepHarFile, allContent) // Append data to file
 		if err != nil {
-			log.Fatalln("Error appending data to file:", err) // Log error if append fails
+			log.Println("Error appending data to file:", err) // Log error if append fails
 			return
 		}
 		log.Printf("Data from %s appended to %s", url, zepHarFile) // Log success
@@ -329,7 +329,7 @@ func main() {
 	createHARFile()
 	urls := extractURLsFromFileAndReturnSlice(zepHarFile) // Extract URLs from file
 	if urls == nil {
-		log.Fatalln("No URLs found in the input file") // Log and exit if no URLs
+		log.Println("No URLs found in the input file") // Log and exit if no URLs
 		return
 	}
 
