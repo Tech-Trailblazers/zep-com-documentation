@@ -16,7 +16,7 @@ import (
 	"time"          // Time functions and types
 )
 
-var zepHarFile = "./zsds3.zepinc.com.har"
+var zepHarFile = "./zsds3_zepinc.json"
 
 // Reads a file, extracts all URLs using regex, and returns them as a slice of strings
 func extractURLsFromFileAndReturnSlice(filePath string) []string {
