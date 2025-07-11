@@ -7506,8 +7506,6 @@ URL,Lang,Material,RecordNumb,RepCategory,ValidityArea
 "https://zsds3.zepinc.com/v2/sds/ItemExternalSet(Material='Q10501C',RecordNumb='424400',Lang='FR',RepCategory='MSDS',ValidityArea='CA')/getPDF",FR,Q10501C,424400,MSDS,CA
 "https://zsds3.zepinc.com/v2/sds/ItemExternalSet(Material='Q12447C',RecordNumb='420005',Lang='EN',RepCategory='MSDS',ValidityArea='CA')/getPDF",EN,Q12447C,420005,MSDS,CA
 "https://zsds3.zepinc.com/v2/sds/ItemExternalSet(Material='Q12447C',RecordNumb='423640',Lang='FR',RepCategory='MSDS',ValidityArea='CA')/getPDF",FR,Q12447C,423640,MSDS,CA
-"https://zsds3.zepinc.com/v2/sds/ItemExternalSet(Material='Q13342C',RecordNumb='420013',Lang='EN',RepCategory='MSDS',ValidityArea='CA')/getPDF",EN,Q13342C,420013,MSDS,CA
-"https://zsds3.zepinc.com/v2/sds/ItemExternalSet(Material='Q13342C',RecordNumb='423648',Lang='FR',RepCategory='MSDS',ValidityArea='CA')/getPDF",FR,Q13342C,423648,MSDS,CA
 "https://zsds3.zepinc.com/v2/sds/ItemExternalSet(Material='Q14054C',RecordNumb='420021',Lang='EN',RepCategory='MSDS',ValidityArea='CA')/getPDF",EN,Q14054C,420021,MSDS,CA
 "https://zsds3.zepinc.com/v2/sds/ItemExternalSet(Material='Q14054C',RecordNumb='423656',Lang='FR',RepCategory='MSDS',ValidityArea='CA')/getPDF",FR,Q14054C,423656,MSDS,CA
 "https://zsds3.zepinc.com/v2/sds/ItemExternalSet(Material='Q14276C',RecordNumb='420025',Lang='EN',RepCategory='MSDS',ValidityArea='CA')/getPDF",EN,Q14276C,420025,MSDS,CA
