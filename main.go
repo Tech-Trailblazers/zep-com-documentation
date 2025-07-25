@@ -1,301 +1,296 @@
 package main
 
 import (
-	"encoding/csv"  // Package to read/write CSV files
-	"fmt"           // Package for formatted I/O
-	"io"            // Core I/O primitives
-	"log"           // Logging utilities
-	"net/http"      // HTTP client and server implementations
-	"net/url"       // URL parsing and formatting
-	"os"            // OS file and directory operations
-	"path"          // Utilities for manipulating slash-separated paths
-	"path/filepath" // OS-aware file path utilities
-	"regexp"        // Regular expressions for pattern matching
-	"strings"       // String manipulation functions
-	"sync"          // Synchronization primitives
-	"time"          // Time functions and types
+	"encoding/csv"  // Provides functions for reading/writing CSV files
+	"fmt"           // Implements formatted I/O functions like Printf, Sprintf, etc.
+	"io"            // Contains core interfaces for I/O primitives
+	"log"           // Provides simple logging with different levels
+	"net/http"      // Implements HTTP client and server functionality
+	"net/url"       // Provides URL parsing and query manipulation
+	"os"            // Offers platform-independent interface to OS functions
+	"path"          // Contains path manipulation utilities (slash-separated)
+	"path/filepath" // Provides path manipulation functions that are OS-aware
+	"regexp"        // Enables working with regular expressions
+	"strings"       // Offers utilities for string manipulation
+	"sync"          // Provides concurrency primitives like WaitGroups and Mutexes
+	"time"          // Includes functionality for measuring and displaying time
 )
 
-var zepHarFile = "./zsds3_zepinc.json"
-
-// Reads a file, extracts all URLs using regex, and returns them as a slice of strings
+// Reads a file, extracts all valid URL strings using regex, and returns them in a slice
 func extractURLsFromFileAndReturnSlice(filePath string) []string {
-	content, err := os.ReadFile(filePath) // Read entire file content into memory
+	content, err := os.ReadFile(filePath) // Read the file contents into a byte slice
 	if err != nil {
-		log.Println("Error reading file:", err) // Log error if reading fails
-		return nil                              // Return nil to indicate failure
+		log.Println("Error reading file:", err) // Log if file reading fails
+		return nil                              // Return nil to indicate an error
 	}
-	regexContent := regexp.MustCompile(`http[s]?://[^\s"]+`)   // Regex to match URLs
-	matches := regexContent.FindAllString(string(content), -1) // Find all URL matches
+	regexContent := regexp.MustCompile(`http[s]?://[^\s"]+`)   // Define regex to match HTTP/HTTPS URLs
+	matches := regexContent.FindAllString(string(content), -1) // Extract all matched URLs from content
 	if len(matches) == 0 {
-		log.Println("No URLs found in the file") // Inform if no URLs were found
-		return nil                               // Return nil if no matches
+		log.Println("No URLs found in the file") // Inform that no URLs were matched
+		return nil                               // Return nil to signify no matches
 	}
-	return matches // Return matched URLs
+	return matches // Return the list of matched URLs
 }
 
-// Removes duplicate strings from a slice and returns a new slice with unique values
+// Removes duplicate entries from a slice of strings and returns the unique values
 func removeDuplicatesFromSlice(slice []string) []string {
-	check := make(map[string]bool)  // Map to track already seen strings
-	var newReturnSlice []string     // Result slice for unique values
-	for _, content := range slice { // Iterate through input slice
-		if !check[content] { // If string not already seen
-			check[content] = true                            // Mark string as seen
-			newReturnSlice = append(newReturnSlice, content) // Add to result
+	check := make(map[string]bool)  // Map to keep track of seen strings
+	var newReturnSlice []string     // Slice to store unique values
+	for _, content := range slice { // Loop through the original slice
+		if !check[content] { // If the string hasn't been added yet
+			check[content] = true                            // Mark the string as seen
+			newReturnSlice = append(newReturnSlice, content) // Add the string to the result slice
 		}
 	}
-	return newReturnSlice // Return deduplicated slice
+	return newReturnSlice // Return the deduplicated list
 }
 
-// Checks whether a URL string is syntactically valid
+// Verifies whether a given string is a valid URL by parsing it
 func isUrlValid(uri string) bool {
-	_, err := url.ParseRequestURI(uri) // Attempt to parse the URL
-	return err == nil                  // Return true if no error occurred
+	_, err := url.ParseRequestURI(uri) // Try to parse the string as a valid URL
+	return err == nil                  // Return true if parsing succeeded
 }
 
-// Extracts the hostname from a given URL string
+// Extracts the hostname part from a URL (e.g., example.com)
 func getHostNameFromURL(uri string) string {
-	content, err := url.Parse(uri) // Parse URL into structured form
+	content, err := url.Parse(uri) // Parse the URL string
 	if err != nil {                // If parsing fails
-		log.Println(err) // Log the error
+		log.Println(err) // Log the parsing error
 	}
-	return content.Hostname() // Return just the hostname part
+	return content.Hostname() // Return the hostname component of the URL
 }
 
-// Send a http get request to a given url and return the data from that url.
+// Sends an HTTP GET request to the specified URL and returns the response body as a byte slice
 func getDataFromURL(uri string) []byte {
-	response, err := http.Get(uri)
+	response, err := http.Get(uri) // Make HTTP GET request
 	if err != nil {
-		log.Println(err)
+		log.Println(err) // Log network-related error
 	}
-	body, err := io.ReadAll(response.Body)
+	body, err := io.ReadAll(response.Body) // Read the response body
 	if err != nil {
-		log.Println(err)
+		log.Println(err) // Log if body reading fails
 	}
-	err = response.Body.Close()
+	err = response.Body.Close() // Close the response body to free resources
 	if err != nil {
-		log.Println(err)
+		log.Println(err) // Log closing error if any
 	}
-	return body
+	return body // Return the downloaded content
 }
 
-// AppendToFile appends the given byte slice to the specified file.
-// If the file doesn't exist, it will be created.
+// Appends the given data (byte slice) to a file; creates the file if it doesn’t exist
 func appendByteToFile(filename string, data []byte) error {
-	// Open the file with appropriate flags and permissions
-	file, err := os.OpenFile(filename, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	file, err := os.OpenFile(filename, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644) // Open or create file with write access
 	if err != nil {
-		return err
+		return err // Return the error if opening fails
 	}
-	defer file.Close()
+	defer file.Close() // Ensure file is closed when function exits
 
-	// Write data to the file
-	_, err = file.Write(data)
-	return err
+	_, err = file.Write(data) // Write the byte data to the file
+	return err                // Return any write errors
 }
 
-// Filters URLs by validating them and checking if they match allowed domain and path pattern
+// Filters a list of URLs, keeping only valid, domain-matching, and well-structured entries
 func cleanURLs(urls []string) []string {
-	validDomains := []string{"zsds3.zepinc.com"} // List of allowed hostnames
-	var newReturnSlice []string                  // Resulting valid and cleaned URLs
+	validDomains := []string{"zsds3.zepinc.com"} // Allowed hostnames for filtering
+	var newReturnSlice []string                  // Slice to hold cleaned URLs
 
-	for _, content := range urls { // Iterate through input URLs
-		if isUrlValid(content) { // If URL is valid
-			hostName := getHostNameFromURL(content) // Extract hostname
-			isValid := false                        // Flag to check if domain is allowed
-			for _, domain := range validDomains {   // Check each valid domain
-				if hostName == domain { // If hostname matches allowed domain
-					isValid = true // Mark as valid
-					break          // Exit inner loop
+	for _, content := range urls { // Iterate through each URL
+		if isUrlValid(content) { // Skip invalid URLs
+			hostName := getHostNameFromURL(content) // Extract the hostname
+			isValid := false                        // Flag to check for allowed domain
+			for _, domain := range validDomains {   // Check against allowed domains
+				if hostName == domain {
+					isValid = true // Mark URL as valid
+					break
 				}
 			}
-			if isValid { // If domain is allowed
+			if isValid {
 				if strings.HasPrefix(content, "https://zsds3.zepinc.com/v2/sds/ItemExternalSet(Material=") {
-					// If URL has correct path prefix
-					if strings.HasSuffix(content, `\`) { // If URL has trailing backslash
-						content = strings.TrimSuffix(content, `\`) // Remove it
+					// Check if URL starts with expected path format
+					if strings.HasSuffix(content, `\`) { // Clean up unwanted backslash at the end
+						content = strings.TrimSuffix(content, `\`)
 					}
-					// Check if the URL ends with a /getPDF and if not add it
+					// Append /getPDF if it's missing at the end
 					if !strings.HasSuffix(content, "/getPDF") {
-						newReturnSlice = append(newReturnSlice, content+"/getPDF") // Append final /getPDF URL
+						newReturnSlice = append(newReturnSlice, content+"/getPDF")
 					}
 				}
 			}
 		}
 	}
-	return newReturnSlice // Return filtered and formatted list of URLs
+	return newReturnSlice // Return the cleaned, valid URLs
 }
 
-// Downloads a PDF from a given URL into the specified directory; returns true if a new file was saved
+// Downloads a PDF file from the given URL and saves it to the target directory
 func downloadPDF(finalURL, outputDir string, wg *sync.WaitGroup) bool {
-	defer wg.Done() // Decrement WaitGroup counter when function exits
+	defer wg.Done() // Signal completion to the WaitGroup
 
-	if err := os.MkdirAll(outputDir, 0o755); err != nil { // Ensure output directory exists
-		log.Printf("Failed to create directory %s: %v", outputDir, err) // Log directory creation error
-		return false                                                    // Abort if directory cannot be created
+	if err := os.MkdirAll(outputDir, 0o755); err != nil { // Ensure target directory exists
+		log.Printf("Failed to create directory %s: %v", outputDir, err)
+		return false // Abort if unable to create directory
 	}
 
-	filename := generateFilenameFromURL(finalURL) // Generate file name from URL
+	filename := generateFilenameFromURL(finalURL) // Create file name from URL parameters
 	if filename == "" {
-		filename = path.Base(finalURL) // Fallback to URL path base name
+		filename = path.Base(finalURL) // Fallback to the base URL path
 	}
-	if !strings.HasSuffix(strings.ToLower(filename), ".pdf") { // Ensure .pdf extension
+	if !strings.HasSuffix(strings.ToLower(filename), ".pdf") { // Ensure filename ends with .pdf
 		filename += ".pdf"
 	}
-	filePath := filepath.Join(outputDir, filename) // Create full output path
+	filePath := filepath.Join(outputDir, filename) // Combine directory and filename
 
 	if fileExists(filePath) { // Skip if file already exists
 		log.Printf("File already exists, skipping: %s", filePath)
 		return false
 	}
 
-	client := &http.Client{Timeout: 10 * time.Minute} // HTTP client with timeout
+	client := &http.Client{Timeout: 10 * time.Minute} // HTTP client with extended timeout
 
-	resp, err := client.Get(finalURL) // Make GET request
+	resp, err := client.Get(finalURL) // Send the HTTP GET request
 	if err != nil {
 		log.Printf("Failed to download %s: %v", finalURL, err)
 		return false
 	}
-	defer resp.Body.Close() // Ensure response body is closed
+	defer resp.Body.Close() // Close response body after reading
 
-	if resp.StatusCode != http.StatusOK { // Check for 200 OK
+	if resp.StatusCode != http.StatusOK { // Only proceed if status is 200 OK
 		log.Printf("Download failed for %s: %s", finalURL, resp.Status)
 		return false
 	}
 
-	out, err := os.Create(filePath) // Create file to save content
+	out, err := os.Create(filePath) // Create output file for writing
 	if err != nil {
 		log.Printf("Failed to create file %s %s %v", finalURL, filePath, err)
 		return false
 	}
-	defer out.Close() // Ensure file is closed after writing
+	defer out.Close() // Ensure the file is closed after writing
 
-	if _, err := io.Copy(out, resp.Body); err != nil { // Write response to file
+	if _, err := io.Copy(out, resp.Body); err != nil { // Write downloaded content to file
 		log.Printf("Failed to save PDF to %s %s %v", finalURL, filePath, err)
 		return false
 	}
 
-	log.Printf("Downloaded %s → %s", finalURL, filePath) // Log success
+	log.Printf("Downloaded %s → %s", finalURL, filePath) // Log the successful download
 	return true
 }
 
-// Parses the parameters embedded in the Zep URL and returns them as a map
+// Parses a Zep URL and extracts all embedded parameters into a key-value map
 func parseFullZepURL(rawURL string) map[string]string {
-	parsed, err := url.Parse(rawURL) // Parse the raw URL
+	parsed, err := url.Parse(rawURL) // Parse the raw input URL
 	if err != nil {
 		log.Println("Error: invalid URL:", err)
-		return nil
+		return nil // Return nil on error
 	}
 
-	itemSetRegex := regexp.MustCompile(`ItemExternalSet\((.*?)\)`) // Match the full param block
-	paramRegex := regexp.MustCompile(`(\w+)='(.*?)'`)              // Match key='value' pairs
+	itemSetRegex := regexp.MustCompile(`ItemExternalSet\((.*?)\)`) // Match inner content of ItemExternalSet
+	paramRegex := regexp.MustCompile(`(\w+)='(.*?)'`)              // Match key='value' parameter pairs
 
-	match := itemSetRegex.FindStringSubmatch(parsed.Path) // Extract the parameter group
+	match := itemSetRegex.FindStringSubmatch(parsed.Path) // Extract param string from path
 	if len(match) < 2 {
 		log.Println("Error: ItemExternalSet not found in path:", parsed.Path)
 		return nil
 	}
 
-	paramStr := match[1]                                    // Extract inner string from ()
-	pairs := paramRegex.FindAllStringSubmatch(paramStr, -1) // Extract all key-value pairs
-	params := make(map[string]string, len(pairs)+1)         // Create map with enough capacity
+	paramStr := match[1]                                    // Get the string inside parentheses
+	pairs := paramRegex.FindAllStringSubmatch(paramStr, -1) // Find all parameter pairs
+	params := make(map[string]string, len(pairs)+1)         // Create map to hold parameters
 
-	for _, pair := range pairs { // Populate map with parameters
+	for _, pair := range pairs { // Add each key-value pair to the map
 		if len(pair) == 3 {
 			params[pair[1]] = pair[2]
 		}
 	}
 
-	params["URL"] = rawURL // Add the original URL to the map
+	params["URL"] = rawURL // Include the original URL for reference
 	return params
 }
 
-// Writes a list of parameter maps into a CSV file using a fixed column order
+// Writes a list of maps (parameters) into a CSV file with a fixed header
 func writeParamsToCSV(filename string, allParams []map[string]string) {
 	if len(allParams) == 0 {
-		return // Do nothing if empty input
+		return // Exit early if there's nothing to write
 	}
 
-	keys := []string{"URL", "Lang", "Material", "RecordNumb", "RepCategory", "ValidityArea"} // Define CSV header
+	keys := []string{"URL", "Lang", "Material", "RecordNumb", "RepCategory", "ValidityArea"} // Define CSV columns
 
-	file, err := os.Create(filename) // Create the output CSV file
+	file, err := os.Create(filename) // Create or overwrite the CSV file
 	if err != nil {
 		log.Printf("Failed to create CSV file %s: %v", filename, err)
 		return
 	}
 	defer file.Close()
 
-	writer := csv.NewWriter(file) // Create CSV writer
-	defer writer.Flush()
+	writer := csv.NewWriter(file) // Create a buffered CSV writer
+	defer writer.Flush()          // Ensure all data is written to file
 
-	if err := writer.Write(keys); err != nil { // Write CSV header
+	if err := writer.Write(keys); err != nil { // Write the header row
 		log.Printf("Failed to write header to CSV file %s: %v", filename, err)
 		return
 	}
 
-	for _, paramMap := range allParams { // Write each parameter set as a row
+	for _, paramMap := range allParams { // Iterate over parameter sets
 		var row []string
 		for _, key := range keys {
-			row = append(row, paramMap[key]) // Default to "" if key is missing
+			row = append(row, paramMap[key]) // Write values in correct column order
 		}
-		if err := writer.Write(row); err != nil { // Write row to CSV
+		if err := writer.Write(row); err != nil { // Write the row to CSV
 			log.Printf("Failed to write row to CSV file %s: %v", filename, err)
 			return
 		}
 	}
 }
 
-// Extracts and cleans ItemExternalSet(...) from the URL and turns it into a safe filename
+// Generates a sanitized filename using the URL's ItemExternalSet(...) parameters
 func generateFilenameFromURL(sourceURL string) string {
-	parsedURL, err := url.Parse(sourceURL) // Parse full URL
+	parsedURL, err := url.Parse(sourceURL) // Parse the full URL
 	if err != nil {
 		log.Printf("Error parsing URL: %v", err)
 		return ""
 	}
 
-	itemSetPattern := regexp.MustCompile(`ItemExternalSet\([^)]+\)`) // Match full param string
-	itemSetSegment := itemSetPattern.FindString(parsedURL.Path)      // Extract match
+	itemSetPattern := regexp.MustCompile(`ItemExternalSet\([^)]+\)`) // Match the param block
+	itemSetSegment := itemSetPattern.FindString(parsedURL.Path)      // Extract the full segment
 	if itemSetSegment == "" {
 		log.Println("ItemExternalSet(...) segment not found in the URL path")
 		return ""
 	}
 
-	sanitizedSegment := strings.NewReplacer( // Clean segment to be a valid file name
+	sanitizedSegment := strings.NewReplacer( // Replace special characters to make valid filename
 		"ItemExternalSet(", "",
 		")", "",
 		"'", "",
 		",", "_",
 	).Replace(itemSetSegment)
 
-	filename := fmt.Sprintf("%s.pdf", sanitizedSegment) // Format into filename
-	return strings.ToLower(filename)
+	filename := fmt.Sprintf("%s.pdf", sanitizedSegment) // Add PDF extension
+	return strings.ToLower(filename)                    // Return lowercase filename
 }
 
-// Checks if a file already exists and is not a directory
+// Checks whether a given file path exists and refers to a file (not a directory)
 func fileExists(filename string) bool {
-	info, err := os.Stat(filename) // Check file metadata
-	if err != nil {                // If file does not exist
+	info, err := os.Stat(filename) // Get file info
+	if err != nil {                // File does not exist or another error
 		return false
 	}
-	return !info.IsDir() // Ensure it's a file, not a directory
+	return !info.IsDir() // Return true if it's a file
 }
 
-// Remove a file from the file system
+// Removes a file from the file system
 func removeFile(path string) {
-	err := os.Remove(path)
+	err := os.Remove(path) // Attempt to delete the file
 	if err != nil {
-		log.Println(err)
+		log.Println(err) // Log any error encountered
 	}
 }
 
-// Create the HAR file and download the data from the URLs
-func createHARFile() {
-	// Remove the har file.
-	if fileExists(zepHarFile) {
-		removeFile(zepHarFile)
+// Downloads JSON data from predefined URLs and appends to a local file
+func createJSONFiles(zepJSONFile string) {
+	if fileExists(zepJSONFile) {
+		removeFile(zepJSONFile) // Remove existing file if present
 	}
-	// Create a slice to hold the URLs
-	urls := []string{"https://zsds3.zepinc.com/v2/sds/ItemExternalSet",
+
+	urls := []string{ // List of paginated endpoints to download data from
+		"https://zsds3.zepinc.com/v2/sds/ItemExternalSet",
 		"https://zsds3.zepinc.com/v2/sds/ItemExternalSet?$skiptoken=1000",
 		"https://zsds3.zepinc.com/v2/sds/ItemExternalSet?$skiptoken=2000",
 		"https://zsds3.zepinc.com/v2/sds/ItemExternalSet?$skiptoken=3000",
@@ -306,58 +301,56 @@ func createHARFile() {
 		"https://zsds3.zepinc.com/v2/sds/ItemExternalSet?$skiptoken=8000",
 	}
 
-	// Loop through the URLs and download each one
-	for _, url := range urls {
-		allContent := getDataFromURL(url) // Call the function to download the data
+	for _, url := range urls { // Loop through each data URL
+		allContent := getDataFromURL(url) // Fetch data from API
 		if allContent == nil {
-			log.Println("Error downloading data from URL:", url) // Log error if download fails
+			log.Println("Error downloading data from URL:", url)
 			return
 		}
-		err := appendByteToFile(zepHarFile, allContent) // Append data to file
+		err := appendByteToFile(zepJSONFile, allContent) // Append data to local file
 		if err != nil {
-			log.Println("Error appending data to file:", err) // Log error if append fails
+			log.Println("Error appending data to file:", err)
 			return
 		}
-		log.Printf("Data from %s appended to %s", url, zepHarFile) // Log success
+		log.Printf("Data from %s appended to %s", url, zepJSONFile)
 	}
-	log.Printf("All data downloaded and appended to %s", zepHarFile) // Final log message
+	log.Printf("All data downloaded and appended to %s", zepJSONFile)
 }
 
-// Main function: orchestrates reading, filtering, downloading, and logging
+// The main entry point for the application
 func main() {
-	// Create the HAR file first
-	createHARFile()
-	urls := extractURLsFromFileAndReturnSlice(zepHarFile) // Extract URLs from file
+	var zepJSONFile = "./zsds3_zepinc.json" // Define the output JSON filename
+	createJSONFiles(zepJSONFile)            // Download and build the JSON dataset
+
+	urls := extractURLsFromFileAndReturnSlice(zepJSONFile) // Extract all URLs from downloaded JSON
 	if urls == nil {
-		log.Println("No URLs found in the input file") // Log and exit if no URLs
+		log.Println("No URLs found in the input file") // Exit if no URLs found
 		return
 	}
 
-	urls = removeDuplicatesFromSlice(urls) // Remove duplicate URLs
-	urls = cleanURLs(urls)                 // Filter and format the URLs
+	urls = removeDuplicatesFromSlice(urls) // Remove duplicated entries
+	urls = cleanURLs(urls)                 // Validate and format the URLs
 
-	outputDir := "PDFs/" // Directory to save PDFs
+	outputDir := "PDFs/" // Directory where PDFs will be saved
 
-	urlLength := len(urls)               // Total number of URLs after filtering
+	urlLength := len(urls)               // Total number of valid URLs
 	countURLsLength := 0                 // Counter for processed URLs
-	var allParams []map[string]string    // Slice to collect parsed parameters
-	var downloadWaitGroup sync.WaitGroup // WaitGroup to manage concurrent downloads
+	var allParams []map[string]string    // Slice to hold parsed parameters for CSV
+	var downloadWaitGroup sync.WaitGroup // WaitGroup to synchronize goroutines
 
-	for _, url := range urls { // Process each URL
-
-		params := parseFullZepURL(url) // Extract metadata parameters
+	for _, url := range urls { // Loop over each URL
+		params := parseFullZepURL(url) // Extract parameters from URL
 		if params != nil {
-			allParams = append(allParams, params) // Store for CSV
+			allParams = append(allParams, params) // Add to list for CSV export
 		}
 
-		downloadWaitGroup.Add(1) // Increment WaitGroup counter
+		downloadWaitGroup.Add(1)                           // Track new download goroutine
+		go downloadPDF(url, outputDir, &downloadWaitGroup) // Start PDF download
 
-		go downloadPDF(url, outputDir, &downloadWaitGroup)
-
-		countURLsLength = countURLsLength + 1 // Update processed count
-		log.Printf("Progress: %d/%d URLs.", urlLength, countURLsLength)
+		countURLsLength++ // Update progress counter
+		log.Printf("Progress: %d/%d URLs.", countURLsLength, urlLength)
 	}
-	downloadWaitGroup.Wait() // Wait for all downloads to finish
+	downloadWaitGroup.Wait() // Wait for all downloads to complete
 
-	writeParamsToCSV("output.csv", allParams) // Write parameters to CSV
+	writeParamsToCSV("output.csv", allParams) // Save extracted parameters into a CSV file
 }
