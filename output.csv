@@ -5634,7 +5634,6 @@ URL,Lang,Material,RecordNumb,RepCategory,ValidityArea
 "https://zsds3.zepinc.com/v2/sds/ItemExternalSet(Material='AF4312EMX',RecordNumb='360289',Lang='EN',RepCategory='DISC2',ValidityArea='ZCAL')/getPDF",EN,AF4312EMX,360289,DISC2,ZCAL
 "https://zsds3.zepinc.com/v2/sds/ItemExternalSet(Material='AF4312F',RecordNumb='360289',Lang='EN',RepCategory='DISC2',ValidityArea='ZCAL')/getPDF",EN,AF4312F,360289,DISC2,ZCAL
 "https://zsds3.zepinc.com/v2/sds/ItemExternalSet(Material='AF4312FC',RecordNumb='360289',Lang='EN',RepCategory='DISC2',ValidityArea='ZCAL')/getPDF",EN,AF4312FC,360289,DISC2,ZCAL
-"https://zsds3.zepinc.com/v2/sds/ItemExternalSet(Material='AF4312FCA',RecordNumb='360289',Lang='EN',RepCategory='DISC2',ValidityArea='ZCAL')/getPDF",EN,AF4312FCA,360289,DISC2,ZCAL
 "https://zsds3.zepinc.com/v2/sds/ItemExternalSet(Material='AF4312T',RecordNumb='360289',Lang='EN',RepCategory='DISC2',ValidityArea='ZCAL')/getPDF",EN,AF4312T,360289,DISC2,ZCAL
 "https://zsds3.zepinc.com/v2/sds/ItemExternalSet(Material='AF4312TC',RecordNumb='360289',Lang='EN',RepCategory='DISC2',ValidityArea='ZCAL')/getPDF",EN,AF4312TC,360289,DISC2,ZCAL
 "https://zsds3.zepinc.com/v2/sds/ItemExternalSet(Material='AF4312TMX',RecordNumb='360289',Lang='EN',RepCategory='DISC2',ValidityArea='ZCAL')/getPDF",EN,AF4312TMX,360289,DISC2,ZCAL
