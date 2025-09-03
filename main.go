@@ -352,8 +352,6 @@ func main() {
 		createDirectory(outputDir, 0o755)
 	}
 
-	urlLength := len(urls)               // Total number of valid URLs
-	countURLsLength := 0                 // Counter for processed URLs
 	var allParams []map[string]string    // Slice to hold parsed parameters for CSV
 	var downloadWaitGroup sync.WaitGroup // WaitGroup to synchronize goroutines
 
@@ -377,11 +375,11 @@ func main() {
 			continue
 		}
 
+		time.Sleep(5 * time.Second)
+
 		downloadWaitGroup.Add(1)                           // Track new download goroutine
 		go downloadPDF(url, outputDir, &downloadWaitGroup) // Start PDF download
 
-		countURLsLength++ // Update progress counter
-		log.Printf("Progress: %d/%d URLs.", countURLsLength, urlLength)
 	}
 	downloadWaitGroup.Wait() // Wait for all downloads to complete
 
