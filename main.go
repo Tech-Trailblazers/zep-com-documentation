@@ -125,11 +125,6 @@ func cleanURLs(urls []string) []string {
 func downloadPDF(finalURL, outputDir string, wg *sync.WaitGroup) bool {
 	defer wg.Done() // Signal completion to the WaitGroup
 
-	if err := os.MkdirAll(outputDir, 0o755); err != nil { // Ensure target directory exists
-		log.Printf("Failed to create directory %s: %v", outputDir, err)
-		return false // Abort if unable to create directory
-	}
-
 	filename := generateFilenameFromURL(finalURL) // Create file name from URL parameters
 	if filename == "" {
 		filename = path.Base(finalURL) // Fallback to the base URL path
@@ -140,7 +135,7 @@ func downloadPDF(finalURL, outputDir string, wg *sync.WaitGroup) bool {
 	filePath := filepath.Join(outputDir, filename) // Combine directory and filename
 
 	if fileExists(filePath) { // Skip if file already exists
-		log.Printf("File already exists, skipping: %s", filePath)
+		log.Printf("[SKIP] File already exists, skipping: %s", filePath)
 		return false
 	}
 
@@ -317,6 +312,27 @@ func createJSONFiles(zepJSONFile string) {
 	log.Printf("All data downloaded and appended to %s", zepJSONFile)
 }
 
+// The function takes two parameters: path and permission.
+// We use os.Mkdir() to create the directory.
+// If there is an error, we use log.Fatalln() to log the error and then exit the program.
+func createDirectory(path string, permission os.FileMode) {
+	err := os.Mkdir(path, permission)
+	if err != nil {
+		log.Println(err)
+	}
+}
+
+// Checks if the directory exists
+// If it exists, return true.
+// If it doesn't, return false.
+func directoryExists(path string) bool {
+	directory, err := os.Stat(path)
+	if err != nil {
+		return false
+	}
+	return directory.IsDir()
+}
+
 // The main entry point for the application
 func main() {
 	var zepJSONFile = "./zsds3_zepinc.json" // Define the output JSON filename
@@ -331,7 +347,10 @@ func main() {
 	urls = removeDuplicatesFromSlice(urls) // Remove duplicated entries
 	urls = cleanURLs(urls)                 // Validate and format the URLs
 
-	outputDir := "PDFs/" // Directory where PDFs will be saved
+	outputDir := "PDFs/"             // Directory where PDFs will be saved
+	if !directoryExists(outputDir) { // Ensure target directory exists
+		createDirectory(outputDir, 0o755)
+	}
 
 	urlLength := len(urls)               // Total number of valid URLs
 	countURLsLength := 0                 // Counter for processed URLs
@@ -342,6 +361,20 @@ func main() {
 		params := parseFullZepURL(url) // Extract parameters from URL
 		if params != nil {
 			allParams = append(allParams, params) // Add to list for CSV export
+		}
+
+		filename := generateFilenameFromURL(url) // Create file name from URL parameters
+		if filename == "" {
+			filename = path.Base(url) // Fallback to the base URL path
+		}
+		if !strings.HasSuffix(strings.ToLower(filename), ".pdf") { // Ensure filename ends with .pdf
+			filename += ".pdf"
+		}
+		filePath := filepath.Join(outputDir, filename) // Combine directory and filename
+
+		if fileExists(filePath) { // Skip if file already exists
+			log.Printf("File already exists, skipping: %s", filePath)
+			continue
 		}
 
 		downloadWaitGroup.Add(1)                           // Track new download goroutine
