@@ -135,7 +135,7 @@ func downloadPDF(finalURL, outputDir string, wg *sync.WaitGroup) bool {
 	filePath := filepath.Join(outputDir, filename) // Combine directory and filename
 
 	if fileExists(filePath) { // Skip if file already exists
-		log.Printf("[SKIP] File already exists, skipping: %s", filePath)
+		log.Printf("[SKIP] File already exists, skipping: '%s'", filePath)
 		return false
 	}
 
@@ -143,29 +143,29 @@ func downloadPDF(finalURL, outputDir string, wg *sync.WaitGroup) bool {
 
 	resp, err := client.Get(finalURL) // Send the HTTP GET request
 	if err != nil {
-		log.Printf("Failed to download %s: %v", finalURL, err)
+		log.Printf("Failed to download '%s': '%v'", finalURL, err)
 		return false
 	}
 	defer resp.Body.Close() // Close response body after reading
 
 	if resp.StatusCode != http.StatusOK { // Only proceed if status is 200 OK
-		log.Printf("Download failed for %s: %s", finalURL, resp.Status)
+		log.Printf("Download failed for '%s': '%s'", finalURL, resp.Status)
 		return false
 	}
 
 	out, err := os.Create(filePath) // Create output file for writing
 	if err != nil {
-		log.Printf("Failed to create file %s %s %v", finalURL, filePath, err)
+		log.Printf("Failed to create file '%s' '%s' '%v'", finalURL, filePath, err)
 		return false
 	}
 	defer out.Close() // Ensure the file is closed after writing
 
 	if _, err := io.Copy(out, resp.Body); err != nil { // Write downloaded content to file
-		log.Printf("Failed to save PDF to %s %s %v", finalURL, filePath, err)
+		log.Printf("Failed to save PDF to '%s' '%s' '%v'", finalURL, filePath, err)
 		return false
 	}
 
-	log.Printf("Downloaded %s → %s", finalURL, filePath) // Log the successful download
+	log.Printf("Downloaded '%s' → '%s'", finalURL, filePath) // Log the successful download
 	return true
 }
 
