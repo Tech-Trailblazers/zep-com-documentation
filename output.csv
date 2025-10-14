@@ -6470,6 +6470,7 @@ URL,Lang,Material,RecordNumb,RepCategory,ValidityArea
 "https://zsds3.zepinc.com/v2/sds/ItemExternalSet(Material='AF4338FMX',RecordNumb='449691',Lang='FR',RepCategory='MSDS',ValidityArea='CA')/getPDF",FR,AF4338FMX,449691,MSDS,CA
 "https://zsds3.zepinc.com/v2/sds/ItemExternalSet(Material='AF4338FMX',RecordNumb='449689',Lang='EN',RepCategory='MSDS',ValidityArea='US')/getPDF",EN,AF4338FMX,449689,MSDS,US
 "https://zsds3.zepinc.com/v2/sds/ItemExternalSet(Material='AF4338FMX',RecordNumb='449695',Lang='ES',RepCategory='MSDS',ValidityArea='US')/getPDF",ES,AF4338FMX,449695,MSDS,US
+"https://zsds3.zepinc.com/v2/sds/ItemExternalSet(Material='AF4342F',RecordNumb='452845',Lang='EN',RepCategory='MSDS',ValidityArea='US')/getPDF",EN,AF4342F,452845,MSDS,US
 "https://zsds3.zepinc.com/v2/sds/ItemExternalSet(Material='AF4349B',RecordNumb='450289',Lang='EN',RepCategory='DISC2',ValidityArea='ZCAL')/getPDF",EN,AF4349B,450289,DISC2,ZCAL
 "https://zsds3.zepinc.com/v2/sds/ItemExternalSet(Material='AF4349B',RecordNumb='451835',Lang='EN',RepCategory='MSDS',ValidityArea='CA')/getPDF",EN,AF4349B,451835,MSDS,CA
 "https://zsds3.zepinc.com/v2/sds/ItemExternalSet(Material='AF4349B',RecordNumb='450296',Lang='FR',RepCategory='MSDS',ValidityArea='CA')/getPDF",FR,AF4349B,450296,MSDS,CA
@@ -8998,4 +8999,3 @@ URL,Lang,Material,RecordNumb,RepCategory,ValidityArea
 "https://zsds3.zepinc.com/v2/sds/ItemExternalSet(Material='AF5915E',RecordNumb='449598',Lang='EN',RepCategory='MSDS',ValidityArea='US')/getPDF",EN,AF5915E,449598,MSDS,US
 "https://zsds3.zepinc.com/v2/sds/ItemExternalSet(Material='AF5915F',RecordNumb='449598',Lang='EN',RepCategory='MSDS',ValidityArea='US')/getPDF",EN,AF5915F,449598,MSDS,US
 "https://zsds3.zepinc.com/v2/sds/ItemExternalSet(Material='AF5915T',RecordNumb='449598',Lang='EN',RepCategory='MSDS',ValidityArea='US')/getPDF",EN,AF5915T,449598,MSDS,US
-"https://zsds3.zepinc.com/v2/sds/ItemExternalSet(Material='AF6001A',RecordNumb='360369',Lang='EN',RepCategory='DISC2',ValidityArea='ZCAL')/getPDF",EN,AF6001A,360369,DISC2,ZCAL
