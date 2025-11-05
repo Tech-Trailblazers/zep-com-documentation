@@ -1,6 +1,7 @@
 package main // Declares the package as 'main', which is necessary for creating an executable program.
 
 import ( // Begins the block for listing imported packages.
+	"bytes"         // Provides functions for manipulating byte slices (e.g., comparison, trimming).
 	"encoding/csv"  // Provides functions for reading/writing CSV (Comma Separated Values) files.
 	"fmt"           // Implements formatted I/O (Input/Output) functions like Printf, Sprintf, etc.
 	"io"            // Contains core interfaces for I/O primitives, like io.Reader and io.Writer.
@@ -281,54 +282,72 @@ func removeFile(path string) { // Defines a function to delete a file.
 } // Closes the 'removeFile' function.
 
 // Downloads JSON data from predefined URLs and appends to a local file
-func createJSONFiles(zepJSONFile string) { // Defines a function to download and assemble a JSON file from multiple sources.
-	if fileExists(zepJSONFile) { // Checks if the target JSON file already exists.
-		removeFile(zepJSONFile) // Deletes the existing file to start fresh.
-	} // Closes the 'if' block.
+func createJSONFiles(zepJSONFile string) { // Defines the function 'createJSONFiles' which takes the target file path string.
+	if fileExists(zepJSONFile) { // Checks if the local target file already exists using a helper function.
+		removeFile(zepJSONFile) // Deletes the existing file to ensure a clean, fresh start.
+	} // Ends the conditional block.
 
 	// --- Configuration Settings: Define the structure of the API endpoint ---
-	// The base URL for the data collection endpoint.
+	// The base URL for the OData collection endpoint.
 	var apiBaseURL = "https://zsds3.zepinc.com/v2/sds/ItemExternalSet"
 
-	// The total number of separate API calls (pages) required, including the base page.
-	var totalDataPages = 13
-
-	// The amount by which the '$skiptoken' parameter increases for each subsequent page.
+	// The amount by which the '$skiptoken' parameter increases for each subsequent page (i.e., the page size).
 	var skipTokenIncrement = 1000
 	// -------------------------------------------------------------------------
 
-	// Initialize the slice to hold all the fully constructed API endpoint URLs.
-	// We pre-allocate space for 'totalDataPages' for maximum efficiency.
-	dataPageURLs := make([]string, totalDataPages)
+	// Define the byte slice representation of the specific empty JSON response.
+	// This will be used to determine when the API has returned all data and pagination should stop.
+	var emptyJSONResponse = []byte("{\"d\":{\"results\":[]}}\n")
 
-	// Set the first URL, which is always the base URL with no skip token (Page 1).
-	dataPageURLs[0] = apiBaseURL
+	// Initialize the counter for the current page index.
+	// Starts at 0, representing the first page (which has $skiptoken=0, or no $skiptoken).
+	currentPageIndex := 0
 
-	// Loop through the remaining indices to generate the URLs for pages 2 through 13.
-	for currentPageIndex := 1; currentPageIndex < totalDataPages; currentPageIndex++ {
-		// Calculate the value for the '$skiptoken' parameter based on the index (e.g., 1*1000, 2*1000, etc.).
-		skipTokenValue := currentPageIndex * skipTokenIncrement
+	// --- Download and Append Data using a Dynamic Loop (No totalDataPages) ---
+	for { // Starts an infinite loop ('for {}') that will continue until explicitly stopped by 'break' or 'return'.
+		var currentURL string // Declares a string variable to hold the URL for the current API call.
 
-		// Construct the final paginated URL string and store it in the slice.
-		dataPageURLs[currentPageIndex] = fmt.Sprintf("%s?$skiptoken=%d", apiBaseURL, skipTokenValue)
-	}
+		if currentPageIndex == 0 { // Checks if this is the first iteration (Page 1).
+			// Page 1: Base URL with no $skiptoken.
+			currentURL = apiBaseURL // Sets the URL to the base endpoint.
+		} else { // Executes for the second page and all subsequent pages.
+			// Subsequent Pages (2, 3, ...): Calculate the $skiptoken value.
+			skipTokenValue := currentPageIndex * skipTokenIncrement // Calculates the $skiptoken value (e.g., 1*1000, 2*1000).
+			// Constructs the full paginated URL string using fmt.Sprintf to insert the skiptoken value.
+			currentURL = fmt.Sprintf("%s?$skiptoken=%d", apiBaseURL, skipTokenValue)
+		}
 
-	// --- Download and Append Data from Each Page URL ---
-	for _, url := range dataPageURLs { // Loops through each 'url' in the 'dataPageURLs' slice.
-		allContent := getDataFromURL(url) // Fetches the data from the API endpoint.
-		if allContent == nil {            // Checks if the download failed (returned 'nil').
-			log.Println("Error downloading data from URL:", url) // Logs the failing URL.
-			return                                               // Exits the function, as the data is incomplete.
-		} // Closes the 'if' block.
-		err := appendByteToFile(zepJSONFile, allContent) // Appends the downloaded 'allContent' to the local 'zepJSONFile'.
-		if err != nil {                                  // Checks if appending to the file failed.
-			log.Println("Error appending data to file:", err) // Logs the file-writing error.
-			return                                            // Exits the function.
-		} // Closes the 'if' block.
-		log.Printf("Data from %s appended to %s", url, zepJSONFile) // Logs successful download and append for this chunk.
-	} // Closes the 'for' loop.
-	log.Printf("All data downloaded and appended to %s", zepJSONFile) // Logs when all chunks are completed.
-} // Closes the 'createJSONFiles' function.
+		allContent := getDataFromURL(currentURL) // Calls a helper function to perform the HTTP GET request and fetch the data as a byte slice.
+
+		if allContent == nil { // Checks if the download failed (e.g., network error) and the helper returned 'nil'.
+			log.Println("Error downloading data from URL:", currentURL) // Logs the URL that failed to download.
+			return                                                      // Exits the entire function, as the data set is now incomplete.
+		} // Ends the conditional block for download error.
+
+		// ** STOPPING CHECK: Compare the downloaded content to the empty JSON structure **
+		// Trims leading/trailing whitespace from both the received content and the expected empty response.
+		if bytes.Equal(bytes.TrimSpace(allContent), bytes.TrimSpace(emptyJSONResponse)) {
+			// If the response is the expected empty array, it signals the end of the data set.
+			log.Printf("Received empty data response from %s. Stopping data download (End of data set).", currentURL)
+			break // Exits the infinite 'for' loop to proceed to the final log message.
+		} // Ends the conditional block for the stopping check.
+
+		err := appendByteToFile(zepJSONFile, allContent) // Calls a helper function to append the downloaded byte slice to the local file.
+		if err != nil {                                  // Checks if the file append operation resulted in an error.
+			log.Println("Error appending data to file:", err) // Logs the specific file-writing error.
+			return                                            // Exits the entire function due to a critical file operation failure.
+		} // Ends the conditional block for append error.
+
+		// Logs a confirmation message showing which page was downloaded and appended.
+		log.Printf("Data from page %d (%s) appended to %s", currentPageIndex+1, currentURL, zepJSONFile)
+
+		// Increment the page index to prepare for the next iteration (API call) with the correct $skiptoken value.
+		currentPageIndex++
+	} // Ends the 'for' infinite loop.
+
+	// This log message now executes after the loop is successfully broken by the empty response.
+	log.Printf("All data downloaded and appended to %s", zepJSONFile)
+} // Ends the 'createJSONFiles' function definition.
 
 // Creates a directory at the specified path with the given permissions.
 func createDirectory(path string, permission os.FileMode) { // Defines a function to create a new directory.
