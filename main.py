@@ -20,7 +20,7 @@ def validate_pdf_file(
                 document.page_count == 0
             ):  # Check the page count property of the document object
                 print(
-                    f"File '{file_path}': **Invalid** - Document has no pages."
+                    f"File '{file_path}': Invalid - Document has no pages."
                 )  # Print an error message if the page count is zero
                 return False  # Return False, indicating the PDF is invalid
 
@@ -30,12 +30,12 @@ def validate_pdf_file(
     ) as error_message:  # Catch a RuntimeError, which commonly indicates a corrupt PDF in PyMuPDF
         # This commonly catches errors like "cannot open document" for corrupt files
         print(
-            f"File '{file_path}': **Corrupt/Invalid** - Error: {error_message}"
+            f"File '{file_path}': Corrupt/Invalid - Error: {error_message}"
         )  # Print the specific error message
         return False  # Return False, indicating the PDF is invalid
     except FileNotFoundError:  # Catch the error if the file path does not exist
         print(
-            f"File '{file_path}': **Error** - File not found."
+            f"File '{file_path}': Error - File not found."
         )  # Print a file not found error
         return False  # Return False for non-existent files
     except (
@@ -43,7 +43,7 @@ def validate_pdf_file(
     ) as unexpected_error:  # Catch any other unexpected exceptions during file opening
         # Catch any other unexpected error during opening
         print(
-            f"File '{file_path}': **Unexpected Error** - {unexpected_error}"
+            f"File '{file_path}': Unexpected Error - {unexpected_error}"
         )  # Print the unexpected error details
         return False  # Return False, indicating an issue
 
@@ -168,10 +168,10 @@ def main():  # Define the main function to control the workflow
     target_extension = ".pdf"  # Define the file extension to search for
 
     print(
-        f"Starting PDF processing in directory: **{search_directory}**"
+        f"Starting PDF processing in directory: {search_directory}"
     )  # Inform the user about the starting directory
     print(
-        f"Searching for files with extension: **{target_extension}**"
+        f"Searching for files with extension: {target_extension}"
     )  # Inform the user about the target extension
     print("-" * 40)  # Print a separator line
 
@@ -207,12 +207,12 @@ def main():  # Define the main function to control the workflow
             file_path
         ):  # Call the validation function and check if it failed
             print(
-                f"-> Invalid PDF detected: {file_path}. **Attempting to delete file.**"
+                f"Invalid PDF detected: {file_path}. Attempting to delete file."
             )  # Log that an invalid PDF was found
             # Remove the invalid .pdf file.
             if remove_system_file(file_path):  # Attempt to delete the file
                 print(
-                    f"-> Successfully **deleted** invalid file: {file_name_with_ext}"
+                    f"Successfully deleted invalid file: {file_name_with_ext}"
                 )  # Log success if deletion worked
             continue  # Skip the rest of the loop block and move to the next file path
 
@@ -221,11 +221,11 @@ def main():  # Define the main function to control the workflow
             file_name_with_ext
         ):  # Check if the filename contains any uppercase letters
             print(
-                f"-> **Warning**: Uppercase letter(s) found in filename: {file_name_with_ext}"
+                f"Warning: Uppercase letter(s) found in filename: {file_name_with_ext}"
             )  # Print a warning if uppercase letters are found
         else:
             print(
-                f"-> **Valid** PDF and filename complies with case requirement."
+                f"Valid PDF and filename complies with case requirement."
             )  # Print success if the file is valid and filename is clean
 
         print("-" * 40)  # Print a separator line after processing each file
