@@ -4521,9 +4521,9 @@ URL,Lang,Material,RecordNumb,RepCategory,ValidityArea
 "https://zsds3.zepinc.com/v2/sds/ItemExternalSet(Material='58735',RecordNumb='426923',Lang='EN',RepCategory='MSDS',ValidityArea='US')/getPDF",EN,58735,426923,MSDS,US
 "https://zsds3.zepinc.com/v2/sds/ItemExternalSet(Material='58785',RecordNumb='374402',Lang='EN',RepCategory='DISC2',ValidityArea='ZCAL')/getPDF",EN,58785,374402,DISC2,ZCAL
 "https://zsds3.zepinc.com/v2/sds/ItemExternalSet(Material='58785',RecordNumb='426923',Lang='EN',RepCategory='MSDS',ValidityArea='US')/getPDF",EN,58785,426923,MSDS,US
-"https://zsds3.zepinc.com/v2/sds/ItemExternalSet(Material='58885',RecordNumb='370051',Lang='EN',RepCategory='DISC2',ValidityArea='ZCAL')/getPDF",EN,58885,370051,DISC2,ZCAL
-"https://zsds3.zepinc.com/v2/sds/ItemExternalSet(Material='58885',RecordNumb='426927',Lang='EN',RepCategory='MSDS',ValidityArea='US')/getPDF",EN,58885,426927,MSDS,US
-"https://zsds3.zepinc.com/v2/sds/ItemExternalSet(Material='58885',RecordNumb='433162',Lang='ES',RepCategory='MSDS',ValidityArea='US')/getPDF",ES,58885,433162,MSDS,US
+"https://zsds3.zepinc.com/v2/sds/ItemExternalSet(Material='58885',RecordNumb='460143',Lang='EN',RepCategory='DISC2',ValidityArea='ZCAL')/getPDF",EN,58885,460143,DISC2,ZCAL
+"https://zsds3.zepinc.com/v2/sds/ItemExternalSet(Material='58885',RecordNumb='460113',Lang='EN',RepCategory='MSDS',ValidityArea='US')/getPDF",EN,58885,460113,MSDS,US
+"https://zsds3.zepinc.com/v2/sds/ItemExternalSet(Material='58885',RecordNumb='460118',Lang='ES',RepCategory='MSDS',ValidityArea='US')/getPDF",ES,58885,460118,MSDS,US
 "https://zsds3.zepinc.com/v2/sds/ItemExternalSet(Material='589824',RecordNumb='367820',Lang='EN',RepCategory='DISC2',ValidityArea='ZCAL')/getPDF",EN,589824,367820,DISC2,ZCAL
 "https://zsds3.zepinc.com/v2/sds/ItemExternalSet(Material='589824',RecordNumb='427939',Lang='EN',RepCategory='MSDS',ValidityArea='US')/getPDF",EN,589824,427939,MSDS,US
 "https://zsds3.zepinc.com/v2/sds/ItemExternalSet(Material='589824',RecordNumb='433978',Lang='ES',RepCategory='MSDS',ValidityArea='US')/getPDF",ES,589824,433978,MSDS,US
