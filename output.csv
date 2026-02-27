@@ -2721,11 +2721,6 @@ URL,Lang,Material,RecordNumb,RepCategory,ValidityArea
 "https://zsds3.zepinc.com/v2/sds/ItemExternalSet(Material='31001',RecordNumb='457509',Lang='FR',RepCategory='MSDS',ValidityArea='CA')/getPDF",FR,31001,457509,MSDS,CA
 "https://zsds3.zepinc.com/v2/sds/ItemExternalSet(Material='31001',RecordNumb='428827',Lang='EN',RepCategory='MSDS',ValidityArea='US')/getPDF",EN,31001,428827,MSDS,US
 "https://zsds3.zepinc.com/v2/sds/ItemExternalSet(Material='31001',RecordNumb='434662',Lang='ES',RepCategory='MSDS',ValidityArea='US')/getPDF",ES,31001,434662,MSDS,US
-"https://zsds3.zepinc.com/v2/sds/ItemExternalSet(Material='310101',RecordNumb='359465',Lang='EN',RepCategory='DISC2',ValidityArea='ZCAL')/getPDF",EN,310101,359465,DISC2,ZCAL
-"https://zsds3.zepinc.com/v2/sds/ItemExternalSet(Material='310101',RecordNumb='455023',Lang='EN',RepCategory='MSDS',ValidityArea='CA')/getPDF",EN,310101,455023,MSDS,CA
-"https://zsds3.zepinc.com/v2/sds/ItemExternalSet(Material='310101',RecordNumb='457773',Lang='FR',RepCategory='MSDS',ValidityArea='CA')/getPDF",FR,310101,457773,MSDS,CA
-"https://zsds3.zepinc.com/v2/sds/ItemExternalSet(Material='310101',RecordNumb='430315',Lang='EN',RepCategory='MSDS',ValidityArea='US')/getPDF",EN,310101,430315,MSDS,US
-"https://zsds3.zepinc.com/v2/sds/ItemExternalSet(Material='310101',RecordNumb='435886',Lang='ES',RepCategory='MSDS',ValidityArea='US')/getPDF",ES,310101,435886,MSDS,US
 "https://zsds3.zepinc.com/v2/sds/ItemExternalSet(Material='310104',RecordNumb='359465',Lang='EN',RepCategory='DISC2',ValidityArea='ZCAL')/getPDF",EN,310104,359465,DISC2,ZCAL
 "https://zsds3.zepinc.com/v2/sds/ItemExternalSet(Material='310104',RecordNumb='455023',Lang='EN',RepCategory='MSDS',ValidityArea='CA')/getPDF",EN,310104,455023,MSDS,CA
 "https://zsds3.zepinc.com/v2/sds/ItemExternalSet(Material='310104',RecordNumb='457773',Lang='FR',RepCategory='MSDS',ValidityArea='CA')/getPDF",FR,310104,457773,MSDS,CA
@@ -5480,7 +5475,6 @@ URL,Lang,Material,RecordNumb,RepCategory,ValidityArea
 "https://zsds3.zepinc.com/v2/sds/ItemExternalSet(Material='AF0212F',RecordNumb='449496',Lang='EN',RepCategory='MSDS',ValidityArea='US')/getPDF",EN,AF0212F,449496,MSDS,US
 "https://zsds3.zepinc.com/v2/sds/ItemExternalSet(Material='AF0216B',RecordNumb='459591',Lang='EN',RepCategory='MSDS',ValidityArea='US')/getPDF",EN,AF0216B,459591,MSDS,US
 "https://zsds3.zepinc.com/v2/sds/ItemExternalSet(Material='AF0216E',RecordNumb='459591',Lang='EN',RepCategory='MSDS',ValidityArea='US')/getPDF",EN,AF0216E,459591,MSDS,US
-"https://zsds3.zepinc.com/v2/sds/ItemExternalSet(Material='AF0216F',RecordNumb='459591',Lang='EN',RepCategory='MSDS',ValidityArea='US')/getPDF",EN,AF0216F,459591,MSDS,US
 "https://zsds3.zepinc.com/v2/sds/ItemExternalSet(Material='AF0218F',RecordNumb='451170',Lang='EN',RepCategory='DISC2',ValidityArea='ZCAL')/getPDF",EN,AF0218F,451170,DISC2,ZCAL
 "https://zsds3.zepinc.com/v2/sds/ItemExternalSet(Material='AF0218F',RecordNumb='451175',Lang='EN',RepCategory='MSDS',ValidityArea='US')/getPDF",EN,AF0218F,451175,MSDS,US
 "https://zsds3.zepinc.com/v2/sds/ItemExternalSet(Material='AF0220A',RecordNumb='451194',Lang='EN',RepCategory='DISC2',ValidityArea='ZCAL')/getPDF",EN,AF0220A,451194,DISC2,ZCAL
@@ -10576,8 +10570,8 @@ URL,Lang,Material,RecordNumb,RepCategory,ValidityArea
 "https://zsds3.zepinc.com/v2/sds/ItemExternalSet(Material='B64001',RecordNumb='400172',Lang='FR',RepCategory='MSDS',ValidityArea='CA')/getPDF",FR,B64001,400172,MSDS,CA
 "https://zsds3.zepinc.com/v2/sds/ItemExternalSet(Material='B74601',RecordNumb='429563',Lang='EN',RepCategory='MSDS',ValidityArea='US')/getPDF",EN,B74601,429563,MSDS,US
 "https://zsds3.zepinc.com/v2/sds/ItemExternalSet(Material='B74601',RecordNumb='435290',Lang='ES',RepCategory='MSDS',ValidityArea='US')/getPDF",ES,B74601,435290,MSDS,US
-"https://zsds3.zepinc.com/v2/sds/ItemExternalSet(Material='B96701',RecordNumb='455019',Lang='EN',RepCategory='MSDS',ValidityArea='CA')/getPDF",EN,B96701,455019,MSDS,CA
 "https://zsds3.zepinc.com/v2/sds/ItemExternalSet(Material='B96701',RecordNumb='399990',Lang='EN',RepCategory='MSDS',ValidityArea='CA')/getPDF",EN,B96701,399990,MSDS,CA
+"https://zsds3.zepinc.com/v2/sds/ItemExternalSet(Material='B96701',RecordNumb='455019',Lang='EN',RepCategory='MSDS',ValidityArea='CA')/getPDF",EN,B96701,455019,MSDS,CA
 "https://zsds3.zepinc.com/v2/sds/ItemExternalSet(Material='B96701',RecordNumb='457769',Lang='FR',RepCategory='MSDS',ValidityArea='CA')/getPDF",FR,B96701,457769,MSDS,CA
 "https://zsds3.zepinc.com/v2/sds/ItemExternalSet(Material='B96801',RecordNumb='399982',Lang='EN',RepCategory='MSDS',ValidityArea='CA')/getPDF",EN,B96801,399982,MSDS,CA
 "https://zsds3.zepinc.com/v2/sds/ItemExternalSet(Material='B96801',RecordNumb='399986',Lang='FR',RepCategory='MSDS',ValidityArea='CA')/getPDF",FR,B96801,399986,MSDS,CA
@@ -11382,13 +11376,13 @@ URL,Lang,Material,RecordNumb,RepCategory,ValidityArea
 "https://zsds3.zepinc.com/v2/sds/ItemExternalSet(Material='H02576C',RecordNumb='455571',Lang='EN',RepCategory='MSDS',ValidityArea='CA')/getPDF",EN,H02576C,455571,MSDS,CA
 "https://zsds3.zepinc.com/v2/sds/ItemExternalSet(Material='H02576C',RecordNumb='458321',Lang='FR',RepCategory='MSDS',ValidityArea='CA')/getPDF",FR,H02576C,458321,MSDS,CA
 "https://zsds3.zepinc.com/v2/sds/ItemExternalSet(Material='H02585',RecordNumb='356693',Lang='EN',RepCategory='DISC2',ValidityArea='ZCAL')/getPDF",EN,H02585,356693,DISC2,ZCAL
-"https://zsds3.zepinc.com/v2/sds/ItemExternalSet(Material='H02585',RecordNumb='439503',Lang='EN',RepCategory='MSDS',ValidityArea='US')/getPDF",EN,H02585,439503,MSDS,US
 "https://zsds3.zepinc.com/v2/sds/ItemExternalSet(Material='H02585',RecordNumb='460342',Lang='EN',RepCategory='MSDS',ValidityArea='US')/getPDF",EN,H02585,460342,MSDS,US
+"https://zsds3.zepinc.com/v2/sds/ItemExternalSet(Material='H02585',RecordNumb='439503',Lang='EN',RepCategory='MSDS',ValidityArea='US')/getPDF",EN,H02585,439503,MSDS,US
 "https://zsds3.zepinc.com/v2/sds/ItemExternalSet(Material='H02585',RecordNumb='460320',Lang='IT',RepCategory='MSDS',ValidityArea='US')/getPDF",IT,H02585,460320,MSDS,US
 "https://zsds3.zepinc.com/v2/sds/ItemExternalSet(Material='H02585',RecordNumb='452418',Lang='ES',RepCategory='MSDS',ValidityArea='US')/getPDF",ES,H02585,452418,MSDS,US
 "https://zsds3.zepinc.com/v2/sds/ItemExternalSet(Material='H02589',RecordNumb='356693',Lang='EN',RepCategory='DISC2',ValidityArea='ZCAL')/getPDF",EN,H02589,356693,DISC2,ZCAL
-"https://zsds3.zepinc.com/v2/sds/ItemExternalSet(Material='H02589',RecordNumb='460342',Lang='EN',RepCategory='MSDS',ValidityArea='US')/getPDF",EN,H02589,460342,MSDS,US
 "https://zsds3.zepinc.com/v2/sds/ItemExternalSet(Material='H02589',RecordNumb='439503',Lang='EN',RepCategory='MSDS',ValidityArea='US')/getPDF",EN,H02589,439503,MSDS,US
+"https://zsds3.zepinc.com/v2/sds/ItemExternalSet(Material='H02589',RecordNumb='460342',Lang='EN',RepCategory='MSDS',ValidityArea='US')/getPDF",EN,H02589,460342,MSDS,US
 "https://zsds3.zepinc.com/v2/sds/ItemExternalSet(Material='H02589',RecordNumb='460320',Lang='IT',RepCategory='MSDS',ValidityArea='US')/getPDF",IT,H02589,460320,MSDS,US
 "https://zsds3.zepinc.com/v2/sds/ItemExternalSet(Material='H02589',RecordNumb='452418',Lang='ES',RepCategory='MSDS',ValidityArea='US')/getPDF",ES,H02589,452418,MSDS,US
 "https://zsds3.zepinc.com/v2/sds/ItemExternalSet(Material='H29945',RecordNumb='367934',Lang='EN',RepCategory='DISC2',ValidityArea='ZCAL')/getPDF",EN,H29945,367934,DISC2,ZCAL
@@ -12786,6 +12780,11 @@ URL,Lang,Material,RecordNumb,RepCategory,ValidityArea
 "https://zsds3.zepinc.com/v2/sds/ItemExternalSet(Material='ZUATBC324',RecordNumb='458677',Lang='FR',RepCategory='MSDS',ValidityArea='CA')/getPDF",FR,ZUATBC324,458677,MSDS,CA
 "https://zsds3.zepinc.com/v2/sds/ItemExternalSet(Material='ZUATBC324',RecordNumb='431059',Lang='EN',RepCategory='MSDS',ValidityArea='US')/getPDF",EN,ZUATBC324,431059,MSDS,US
 "https://zsds3.zepinc.com/v2/sds/ItemExternalSet(Material='ZUATBC324',RecordNumb='436442',Lang='ES',RepCategory='MSDS',ValidityArea='US')/getPDF",ES,ZUATBC324,436442,MSDS,US
+"https://zsds3.zepinc.com/v2/sds/ItemExternalSet(Material='ZUATBC3256LWS',RecordNumb='360745',Lang='EN',RepCategory='DISC2',ValidityArea='ZCAL')/getPDF",EN,ZUATBC3256LWS,360745,DISC2,ZCAL
+"https://zsds3.zepinc.com/v2/sds/ItemExternalSet(Material='ZUATBC3256LWS',RecordNumb='455927',Lang='EN',RepCategory='MSDS',ValidityArea='CA')/getPDF",EN,ZUATBC3256LWS,455927,MSDS,CA
+"https://zsds3.zepinc.com/v2/sds/ItemExternalSet(Material='ZUATBC3256LWS',RecordNumb='458677',Lang='FR',RepCategory='MSDS',ValidityArea='CA')/getPDF",FR,ZUATBC3256LWS,458677,MSDS,CA
+"https://zsds3.zepinc.com/v2/sds/ItemExternalSet(Material='ZUATBC3256LWS',RecordNumb='431059',Lang='EN',RepCategory='MSDS',ValidityArea='US')/getPDF",EN,ZUATBC3256LWS,431059,MSDS,US
+"https://zsds3.zepinc.com/v2/sds/ItemExternalSet(Material='ZUATBC3256LWS',RecordNumb='436442',Lang='ES',RepCategory='MSDS',ValidityArea='US')/getPDF",ES,ZUATBC3256LWS,436442,MSDS,US
 "https://zsds3.zepinc.com/v2/sds/ItemExternalSet(Material='ZUATBC3272NC',RecordNumb='360745',Lang='EN',RepCategory='DISC2',ValidityArea='ZCAL')/getPDF",EN,ZUATBC3272NC,360745,DISC2,ZCAL
 "https://zsds3.zepinc.com/v2/sds/ItemExternalSet(Material='ZUATBC3272NC',RecordNumb='455927',Lang='EN',RepCategory='MSDS',ValidityArea='CA')/getPDF",EN,ZUATBC3272NC,455927,MSDS,CA
 "https://zsds3.zepinc.com/v2/sds/ItemExternalSet(Material='ZUATBC3272NC',RecordNumb='458677',Lang='FR',RepCategory='MSDS',ValidityArea='CA')/getPDF",FR,ZUATBC3272NC,458677,MSDS,CA
