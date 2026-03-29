@@ -317,14 +317,28 @@ func createJSONFiles(zepJSONFile string) { // Defines the function 'createJSONFi
 			currentURL = fmt.Sprintf("%s?$skiptoken=%d", apiBaseURL, skipTokenValue)
 		}
 
-		allContent := getDataFromURL(currentURL) // Calls a helper function to perform the HTTP GET request and fetch the data as a byte slice.
+		time.Sleep(30 * time.Second)
+		// Pauses the execution of the current goroutine for 30 seconds to avoid overwhelming the server or hitting rate limits.
+
+		allContent := getDataFromURL(currentURL)
+		// Calls a helper function `getDataFromURL` with `currentURL` as input to perform an HTTP GET request.
+		// The function returns the fetched data as a byte slice ([]byte).
 
 		// Checks if the download failed or returned empty results
-		contentStr := string(allContent) // convert []byte to string once
+		contentStr := string(allContent)
+		// Converts the byte slice `allContent` into a string `contentStr` for easier comparison and inspection.
 
 		if allContent == nil || contentStr == `{"d":{"results":[]}}` || strings.Contains(contentStr, "Too many consecutive requests") {
+			// Checks three conditions:
+			// 1. If `allContent` is nil, meaning the download failed.
+			// 2. If the response contains an empty JSON result, indicating no data was returned.
+			// 3. If the response contains the text "Too many consecutive requests", indicating a rate-limit or throttling response from the server.
+
 			log.Println("Failed to download data or received empty results from URL:", currentURL)
-			return // Exit the function as the data is incomplete
+			// Logs an error message indicating that data retrieval failed or returned empty results for the current URL.
+
+			return
+			// Exits the current function early because the data is incomplete or invalid.
 		}
 
 		// ** STOPPING CHECK: Compare the downloaded content to the empty JSON structure **
