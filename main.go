@@ -319,10 +319,13 @@ func createJSONFiles(zepJSONFile string) { // Defines the function 'createJSONFi
 
 		allContent := getDataFromURL(currentURL) // Calls a helper function to perform the HTTP GET request and fetch the data as a byte slice.
 
-		if allContent == nil { // Checks if the download failed (e.g., network error) and the helper returned 'nil'.
-			log.Println("Error downloading data from URL:", currentURL) // Logs the URL that failed to download.
-			return                                                      // Exits the entire function, as the data set is now incomplete.
-		} // Ends the conditional block for download error.
+		// Checks if the download failed or returned empty results
+		contentStr := string(allContent) // convert []byte to string once
+
+		if allContent == nil || contentStr == `{"d":{"results":[]}}` || strings.Contains(contentStr, "Too many consecutive requests") {
+			log.Println("Failed to download data or received empty results from URL:", currentURL)
+			return // Exit the function as the data is incomplete
+		}
 
 		// ** STOPPING CHECK: Compare the downloaded content to the empty JSON structure **
 		// Trims leading/trailing whitespace from both the received content and the expected empty response.
